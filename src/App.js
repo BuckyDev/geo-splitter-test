@@ -1,23 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
+import Grid from './Grid';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div style={{ marginTop: '20px', marginBottom: '10px'}}>Original</div>
+        <Grid type='original' />
+        <div style={{ marginTop: '20px', marginBottom: '10px'}}>Splitted</div>
+        <Grid type='splitted' />
+        <div style={{ marginTop: '20px', marginBottom: '10px'}}>Built back</div>
+        <Grid type='built-back' />
+        <div style={{ height: '30px' }} />
       </header>
     </div>
   );
