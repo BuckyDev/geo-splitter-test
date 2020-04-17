@@ -2,11 +2,22 @@ import {
   genArray,
   getSplitPoints,
   pushArray,
+  mapFrom,
+  flattenDoubleArray,
+  substractArr,
+  includeArr
+} from './utils';
+
+import {
   getUpPointsNb,
   getDownPointsNb,
   getLeftPointsNb,
   getRightPointsNb,
-} from './utils';
+  isEntryPoint,
+  isExitPoint,
+  isInSquare,
+  isCornerPointDirect,
+} from './pointUtils';
 
 //Add all missing crossborder points for a polygon
 function addSplitPointFeature(coordinates, gridSize) {
@@ -64,11 +75,116 @@ function generateIntersectionPoints(data, gridSize) {
     })
   })
 
-  return data.features.map( feature => 
-    {const result = pointsToTest.filter( point => isPointInside(point,feature))
-  return result}
+  return data.features.map(feature => {
+    const result = pointsToTest.filter(point => isPointInside(point, feature))
+    return result
+  }
   )
+}
 
+//Generate the subset for a square area
+function generatePointSubset(minX, maxX, minY, maxY, coordinates) {
+  const pointSubset = [];
+  coordinates.map(polygonPoints => {
+    const start = polygonPoints.findIndex((point, idx) => {
+      const prevPoint = polygonPoints[idx === 0 ? polygonPoints.length - 1 : idx - 1]
+      const nextPoint = polygonPoints[idx === polygonPoints.length - 1 ? 0 : idx + 1]
+      return isEntryPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint);
+    })
+    if (start === -1) {
+      if (polygonPoints.every(point => isInSquare(minX, maxX, minY, maxY, point))) {
+        pointSubset.push(polygonPoints);
+      }
+      return null;
+    }
+    let currentPathIdx = -1
+    mapFrom(polygonPoints, start, (pt, idx) => {
+      const point = polygonPoints[idx]
+      const prevPoint = polygonPoints[idx === 0 ? polygonPoints.length - 1 : idx - 1]
+      const nextPoint = polygonPoints[idx === polygonPoints.length - 1 ? 0 : idx + 1]
+      if (isEntryPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint)) {
+        pointSubset.push([point]);
+        currentPathIdx++;
+      } else if (isInSquare(minX, maxX, minY, maxY, point)) {
+        pointSubset[currentPathIdx].push(point);
+      }
+    })
+  })
+  return pointSubset;
+}
+
+function generateCornerPointsSubset(minX, maxX, minY, maxY, cornerPoints) {
+  return cornerPoints.filter(point => isInSquare(minX, maxX, minY, maxY, point))
+}
+
+function mergeCornerPoints(pointSubset, cornerPointSubset) {
+  //Close polygons without corner points
+  if (cornerPointSubset.length === 0) {
+    const result = []
+    pointSubset.map(path => pushArray(result,path))
+    return [result]
+  }
+  //Close polygons with corner points
+  if (cornerPointSubset.length > 0 && cornerPointSubset.length < 3 && pointSubset.length > 0) {
+    pointSubset.map((path, idx) => {
+      const pointCloud = flattenDoubleArray(pointSubset.filter((el, i) => i !== idx))
+      const toRemove = []
+      cornerPointSubset.map(cornerPoint => {
+        if (isCornerPointDirect(path[path.length - 1], cornerPoint, pointCloud)) {
+          path.push(cornerPoint);
+          toRemove.push(cornerPoint);
+        } else if (isCornerPointDirect(path[0], cornerPoint, pointCloud)) {
+          path.splice(0, 0, cornerPoint);
+          toRemove.push(cornerPoint);
+        }
+      })
+      substractArr(cornerPointSubset, toRemove);
+    })
+    return pointSubset
+  }
+  //Close polygons with only 4 corner points
+  if (cornerPointSubset.length === 4 && pointSubset.length === 0) {
+    const result=[cornerPointSubset.pop()];
+    genArray(0,2,1).map(() => {
+      const idx = cornerPointSubset.findIndex(el =>
+        (el[0] === result[result.length-1][0] || 
+        el[1] === result[result.length-1][1]) &&
+        !includeArr(result,el)
+      )
+
+      if(idx > -1){
+        result.push(cornerPointSubset[idx])
+        cornerPointSubset.splice(idx,0)
+      }
+    })
+    return [result];
+  }
+  return pointSubset
+}
+
+function builtAreaSplit(newData, cornerPoints, gridSize) {
+  const areas = [];
+  genArray(0, 90, gridSize).map(x => {
+    genArray(0, 40, gridSize).map(y => {
+      const newFeatures = newData.features.map((feature, idx) => {
+        const pointSubset = generatePointSubset(x, x + gridSize, y, y + gridSize, feature.geometry.coordinates);
+        const cornerPointSubset = generateCornerPointsSubset(x, x + gridSize, y, y + gridSize, cornerPoints[idx]);
+        const finalCoordinates = mergeCornerPoints(pointSubset, cornerPointSubset);
+        return {
+          ...feature,
+          geometry: {
+            ...feature.geometry,
+            coordinates: finalCoordinates
+          }
+        }
+      })
+      areas.push({
+        ...newData,
+        features: newFeatures
+      })
+    })
+  })
+  return areas;
 }
 
 //Final function
@@ -78,7 +194,14 @@ export default function split(data, gridSize) {
     ...data,
     features: splitPointsData,
   }
+  console.log(splitPointsData)
   const intersectionPoints = generateIntersectionPoints(newData, gridSize);
-  const testblob = [90,20];
-  return [newData];
+  let splittedData = [newData]
+  console.log(intersectionPoints)
+  try {
+    splittedData = builtAreaSplit(newData, intersectionPoints, gridSize);
+  } catch (e) {
+    console.error(e)
+  }
+  return splittedData;
 }

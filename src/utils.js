@@ -1,3 +1,30 @@
+export function randomColor(){
+  return `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`
+}
+
+export function flattenDoubleArray(arr){
+  const result=[];
+  arr.map(innerArr => innerArr.map(el => result.push(el)))
+  return result;
+}
+
+export function substractArr(resultArr, removedArr){
+  removedArr.map( val => {
+    const idx = removedArr.indexOf(val)
+    if(idx> -1){
+      resultArr.splice(idx,0);
+    }
+  })
+}
+
+export function mapFrom(arr, start, callback){
+  const length = arr.length;
+  return arr.map((val,idx) => {
+    const newIdx = idx + start < length ? idx + start : idx + start - length
+    return callback(val, newIdx)
+  })
+}
+
 export function genArray(start, stop, diff) {
   let arr = [];
   let value = start;
@@ -27,7 +54,7 @@ function distance(p1, p2) {
   return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2))
 }
 
-function includeArr(arr, val) {
+export function includeArr(arr, val) {
   return !!arr.find(el => eqArr(el, val));
 }
 
@@ -67,76 +94,6 @@ export function getSplitPoints(segment, gridSize) {
   }
 
   return points;
-}
-
-//Get relative points
-
-export function getUpPointsNb(testPoint, pointCloud) {
-  return pointCloud.filter((point, idx) => {
-    const prevPoint = pointCloud[idx === 0 ? pointCloud.length - 1 : idx - 1]
-    const nextPoint = pointCloud[idx === pointCloud.length - 1 ? 0 : idx + 1]
-    const isAdjacentAngle = ((prevPoint[0] > point[0]) &&
-      (nextPoint[0] > point[0])) ||
-      ((prevPoint[0] < point[0]) &&
-        (nextPoint[0] < point[0]))
-    const isInline = prevPoint[0] === point[0]
-
-    return (point[0] === testPoint[0]) &&
-      (point[1] > testPoint[1]) &&
-      !isAdjacentAngle &&
-      !isInline
-  }).length
-}
-
-export function getDownPointsNb(testPoint, pointCloud) {
-  return pointCloud.filter((point, idx) => {
-    const prevPoint = pointCloud[idx === 0 ? pointCloud.length - 1 : idx - 1]
-    const nextPoint = pointCloud[idx === pointCloud.length - 1 ? 0 : idx + 1]
-    const isAdjacentAngle = ((prevPoint[0] > point[0]) &&
-      (nextPoint[0] > point[0])) ||
-      ((prevPoint[0] < point[0]) &&
-        (nextPoint[0] < point[0]))
-    const isInline = prevPoint[0] === point[0]
-
-    return (point[0] === testPoint[0]) &&
-      (point[1] < testPoint[1]) &&
-      !isAdjacentAngle &&
-      !isInline
-  }).length
-}
-
-export function getLeftPointsNb(testPoint, pointCloud) {
-  return pointCloud.filter((point, idx) => {
-    const prevPoint = pointCloud[idx === 0 ? pointCloud.length - 1 : idx - 1]
-    const nextPoint = pointCloud[idx === pointCloud.length - 1 ? 0 : idx + 1]
-    const isAdjacentAngle = ((prevPoint[1] > point[1]) &&
-      (nextPoint[1] > point[1])) ||
-      ((prevPoint[1] < point[1]) &&
-        (nextPoint[1] < point[1]))
-    const isInline = prevPoint[1] === point[1]
-
-    return (point[0] < testPoint[0]) &&
-      (point[1] === testPoint[1]) &&
-      !isAdjacentAngle &&
-      !isInline
-  }).length
-}
-
-export function getRightPointsNb(testPoint, pointCloud) {
-  return pointCloud.filter((point, idx) => {
-    const prevPoint = pointCloud[idx === 0 ? pointCloud.length - 1 : idx - 1]
-    const nextPoint = pointCloud[idx === pointCloud.length - 1 ? 0 : idx + 1]
-    const isAdjacentAngle = ((prevPoint[1] > point[1]) &&
-      (nextPoint[1] > point[1])) ||
-      ((prevPoint[1] < point[1]) &&
-        (nextPoint[1] < point[1]))
-    const isInline = prevPoint[1] === point[1]
-
-    return (point[0] > testPoint[0]) &&
-      (point[1] === testPoint[1]) &&
-      !isAdjacentAngle &&
-      !isInline
-  }).length
 }
 
 export const blobtest = [

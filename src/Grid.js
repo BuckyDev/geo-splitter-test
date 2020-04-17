@@ -4,7 +4,10 @@ import * as d3 from 'd3';
 
 import fullSample from './polygon/fullSample';
 import split from './split';
-import {genArray} from './utils';
+import {
+  genArray,
+  randomColor
+} from './utils';
 
 class Grid extends Component {
   constructor(){
@@ -55,10 +58,11 @@ class Grid extends Component {
 
   renderSplittedPolygons() {
     return this.state.splitted.map(file => {
+      const color = randomColor();
       return file.features.map(feature => {
         return feature.geometry.coordinates.map(polygon => {
           const path = d3.line()(polygon.map(coord => [coord[0] * 10, 500 - coord[1] * 10]))
-          return <path d={path} stroke="none" fill="#e2980c" />
+          return <path d={path} stroke="none" fill={color} />
         })
       })
     })
