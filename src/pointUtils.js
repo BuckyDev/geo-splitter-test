@@ -1,3 +1,7 @@
+import {
+  includeArr
+} from './utils'
+
 //If a point is on a grid line
 export function isSplitPoint(point, gridSize) {
   return point[0] % gridSize === 0 || point[1] % gridSize === 0
@@ -13,23 +17,92 @@ export function isAdjacentAngle(point, prevPoint, nextPoint, type) {
       (nextPoint[coord] < point[coord]))
 };
 
-export function isInSquare(minX,maxX,minY,maxY,point){
+export function isInSquare(minX, maxX, minY, maxY, point) {
   return point[0] >= minX &&
-  point[0] <= maxX &&
-  point[1] >= minY &&
-  point[1] <= maxY 
+    point[0] <= maxX &&
+    point[1] >= minY &&
+    point[1] <= maxY
 }
 
-export function isEntryPoint(minX,maxX,minY,maxY, point, prevPoint, nextPoint){
-  return isInSquare(minX,maxX,minY,maxY,point) && 
-  isInSquare(minX,maxX,minY,maxY,nextPoint) &&
-  !isInSquare(minX,maxX,minY,maxY,prevPoint)
+//Gives the side of the square on which the split point is
+//Do not handle corners !!!
+export function splitSquareSide(minX, maxX, minY, maxY, splitPoint) {
+  if (splitPoint[0] === minX) {
+    return 'left'
+  }
+  if (splitPoint[0] === maxX) {
+    return 'right'
+  }
+  if (splitPoint[1] === minY) {
+    return 'bottom'
+  }
+  if (splitPoint[1] === maxY) {
+    return 'top'
+  }
 }
 
-export function isExitPoint(minX,maxX,minY,maxY, point, prevPoint, nextPoint){
-  return isInSquare(minX,maxX,minY,maxY,point) && 
-  !isInSquare(minX,maxX,minY,maxY,nextPoint) &&
-  isInSquare(minX,maxX,minY,maxY,prevPoint)
+//Handle corners with selection of the belonging side
+export function splitSquareSide2(minX, maxX, minY, maxY, splitPoint) {
+  if (splitPoint[0] === minX && splitPoint[1] < maxY) { return 'left' }
+  if (splitPoint[0] === maxX && splitPoint[1] > minY) { return 'right' }
+  if (splitPoint[1] === minY && splitPoint[0] > minX) { return 'bottom' }
+  if (splitPoint[1] === maxY && splitPoint[0] < maxX) { return 'top' }
+}
+
+const SQUARE = ['top', 'right', 'bottom', 'left'];
+
+export function isCornerPath(minX, maxX, minY, maxY, path) {
+  const startPoint = path[0];
+  const endPoint = path[path.length - 1];
+  const startSide = splitSquareSide(minX, maxX, minY, maxY, startPoint);
+  const endSide = splitSquareSide(minX, maxX, minY, maxY, endPoint);
+  const gap = Math.abs(SQUARE.indexOf(endSide) - SQUARE.indexOf(startSide))
+  if (gap === 1 || gap === 3) {
+    return true;
+  }
+  return false;
+}
+
+//Gives if the point is at the corner of the square
+export function isInCorner(minX, maxX, minY, maxY, point) {
+  const validCoord = [minX, maxX, minY, maxY];
+  return validCoord.includes(point[0]) && validCoord.includes(point[1])
+}
+
+export function followingCorner(minX, maxX, minY, maxY, point) {
+  const side = splitSquareSide2(minX, maxX, minY, maxY, point);
+  switch (side) {
+    case 'left':
+      return [minX, maxY];
+    case 'right':
+      return [minX, maxY];
+    case 'bottom':
+      return [minX, maxY];
+    case 'top':
+      return [minX, maxY];
+  }
+}
+
+export function isVirtual(point, cornerPoints) {
+  return includeArr(cornerPoints, point);
+}
+
+export function isBouncePoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
+  return isInSquare(minX, maxX, minY, maxY, point) &&
+    !isInSquare(minX, maxX, minY, maxY, nextPoint) &&
+    !isInSquare(minX, maxX, minY, maxY, prevPoint)
+}
+
+export function isEntryPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
+  return isInSquare(minX, maxX, minY, maxY, point) &&
+    isInSquare(minX, maxX, minY, maxY, nextPoint) &&
+    !isInSquare(minX, maxX, minY, maxY, prevPoint)
+}
+
+export function isExitPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
+  return isInSquare(minX, maxX, minY, maxY, point) &&
+    !isInSquare(minX, maxX, minY, maxY, nextPoint) &&
+    isInSquare(minX, maxX, minY, maxY, prevPoint)
 }
 
 //Get relative points
@@ -108,7 +181,7 @@ export function arePointsAligned(pointA, pointB, type) {
 //If a polygon point is a split point and both closest neibhors are on the same side of the gridline
 
 export function isCornerPointDirect(point, cornerPoint, pointCloud) {
-  if (!arePointsAligned(point, point, 'vertical') && !arePointsAligned(point, point, 'horizontal')) {
+  if (!arePointsAligned(point, cornerPoint, 'vertical') && !arePointsAligned(point, cornerPoint, 'horizontal')) {
     return false;
   }
   let unsharedCoord = point[0] === cornerPoint[0] ? 1 : 0;

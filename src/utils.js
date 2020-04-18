@@ -10,9 +10,28 @@ export function flattenDoubleArray(arr){
 
 export function substractArr(resultArr, removedArr){
   removedArr.map( val => {
-    const idx = removedArr.indexOf(val)
+    const idx = resultArr.indexOf(val)
     if(idx> -1){
-      resultArr.splice(idx,0);
+      resultArr.splice(idx,1);
+    }
+  })
+}
+
+function findPointIndex(pointArr,point){
+  let index = -1
+  pointArr.map((el,idx) => {
+    if(index === -1 && arePointsEqual(el,point)){
+      index = idx;
+    }
+  })
+  return index;
+}
+
+export function substractPoints(resultPointArr,removedPointArr){
+  removedPointArr.map( val => {
+    const idx = findPointIndex(resultPointArr,val)
+    if(idx> -1){
+      resultPointArr.splice(idx,1);
     }
   })
 }
@@ -50,7 +69,11 @@ function eqArr(arr1, arr2) {
   return arr1.every((el, idx) => el === arr2[idx]);
 }
 
-function distance(p1, p2) {
+export function arePointsEqual(p1,p2){
+  return eqArr(p1, p2);
+}
+
+export function distance(p1, p2) {
   return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2))
 }
 
