@@ -10,8 +10,6 @@ function App() {
         <Grid type='original' />
         <div style={{ marginTop: '20px', marginBottom: '10px'}}>Splitted</div>
         <Grid type='splitted' />
-        <div style={{ marginTop: '20px', marginBottom: '10px'}}>Built back</div>
-        <Grid type='built-back' />
         <div style={{ height: '30px' }} />
       </header>
     </div>

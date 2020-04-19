@@ -112,6 +112,10 @@ export function buildPath(start, minX, maxX, minY, maxY, pointSubset, orderedCor
   return newPath;
 }
 
+function virtualCornerMerger(minX, maxX, minY, maxY, newSubset, pointSubset) {
+  
+}
+
 export function cornerPointMerger(minX, maxX, minY, maxY, pointSubset, cornerPointSubset) {
   //Early returns
   if (pointSubset.length === 0 && cornerPointSubset.length === 0) return pointSubset; //Empty area
@@ -129,11 +133,15 @@ export function cornerPointMerger(minX, maxX, minY, maxY, pointSubset, cornerPoi
   }
   if (pointSubset.length === 0 && orderedCornerPoints.length === 0) return newSubset;
 
-  //Handles path exclusive polygons
-  if (pointSubset.length > 0 && orderedCornerPoints.length === 0) {
+  //Handles single path exclusive polygon => it can only close on itself so it can be added directly
+  if (pointSubset.length === 1 && orderedCornerPoints.length === 0) {
+    newSubset.push(pointSubset[0]);
+    return newSubset;
+  }
 
+  //Handles multiple path exclusive polygons
+  if (pointSubset.length > 0 && orderedCornerPoints.length === 0) {
+    virtualCornerMerger(minX, maxX, minY, maxY, newSubset, pointSubset)
     return newSubset;
   }
 }
-
-//Need a function to remove excluded adjacent path

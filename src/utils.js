@@ -1,46 +1,70 @@
-export function randomColor(){
-  return `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`
+export function randomColor() {
+  return `rgb(${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50})`
 }
 
-export function flattenDoubleArray(arr){
-  const result=[];
+export function max(pointArray, coord) {
+  let max;
+  pointArray.map(pt => {
+    if (!max) {
+      max = pt[coord]
+    } else if (pt[coord] > max) {
+      max = pt[coord];
+    }
+  })
+  return max;
+}
+
+export function min(pointArray, coord) {
+  let min;
+  pointArray.map(pt => {
+    if (!min) {
+      min = pt[coord]
+    } else if (pt[coord] < min) {
+      min = pt[coord];
+    }
+  })
+  return min;
+}
+
+export function flattenDoubleArray(arr) {
+  const result = [];
   arr.map(innerArr => innerArr.map(el => result.push(el)))
   return result;
 }
 
-export function substractArr(resultArr, removedArr){
-  removedArr.map( val => {
+export function substractArr(resultArr, removedArr) {
+  removedArr.map(val => {
     const idx = resultArr.indexOf(val)
-    if(idx> -1){
-      resultArr.splice(idx,1);
+    if (idx > -1) {
+      resultArr.splice(idx, 1);
     }
   })
 }
 
-function findPointIndex(pointArr,point){
+export function findPointIndex(pointArr, point) {
   let index = -1
-  pointArr.map((el,idx) => {
-    if(index === -1 && arePointsEqual(el,point)){
+  pointArr.map((el, idx) => {
+    if (index === -1 && arePointsEqual(el, point)) {
       index = idx;
     }
   })
   return index;
 }
 
-export function substractPoints(resultPointArr,removedPointArr){
-  removedPointArr.map( val => {
-    const idx = findPointIndex(resultPointArr,val)
-    if(idx> -1){
-      resultPointArr.splice(idx,1);
+export function substractPoints(resultPointArr, removedPointArr) {
+  removedPointArr.map(val => {
+    const idx = findPointIndex(resultPointArr, val)
+    if (idx > -1) {
+      resultPointArr.splice(idx, 1);
     }
   })
 }
 
-export function mapFrom(arr, start, callback){
+export function mapFrom(arr, start, callback) {
   const length = arr.length;
-  return arr.map((val,idx) => {
+  return arr.map((val, idx) => {
     const newIdx = idx + start < length ? idx + start : idx + start - length
-    return callback(val, newIdx)
+    return callback(arr[newIdx], newIdx)
   })
 }
 
@@ -69,7 +93,7 @@ function eqArr(arr1, arr2) {
   return arr1.every((el, idx) => el === arr2[idx]);
 }
 
-export function arePointsEqual(p1,p2){
+export function arePointsEqual(p1, p2) {
   return eqArr(p1, p2);
 }
 

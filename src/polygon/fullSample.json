@@ -138,6 +138,66 @@
           ]
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "6"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [65,19],
+            [70,17],
+            [70,14],
+            [73,13],
+            [68,11]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [76,35],
+            [81,37],
+            [88,36],
+            [93,34],
+            [91,32],
+            [86,34],
+            [83,32],
+            [77,33]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [40,29],
+            [45,25],
+            [42,22],
+            [37,22],
+            [35,23],
+            [38,24],
+            [42,25],
+            [40,26]
+          ]
+        ]
+      }
     }
   ]
 }

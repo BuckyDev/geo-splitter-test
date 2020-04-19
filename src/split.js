@@ -5,7 +5,8 @@ import {
   mapFrom,
   flattenDoubleArray,
   substractArr,
-  includeArr
+  includeArr,
+  arePointsEqual
 } from './utils';
 
 import {
@@ -19,22 +20,16 @@ import {
   isInSquare,
   isCornerPointDirect,
   isCornerPath,
+  isInnerCorner,
+  isInCorner,
+  isStrictEntryPoint,
+  isStrictlyInSquare,
+  isStrictExitPoint
 } from './pointUtils';
 
 import {
   cornerPointMerger
 } from './cornerPointMerger';
-
-import {
-  buildPath
-} from './cornerPointMerger'
-
-
-import {
-  start_1020,
-  orderedCornerPoints_1020,
-  pointSubset_1020
-} from './test/test'
 
 //Add all missing crossborder points for a polygon
 function addSplitPointFeature(coordinates, gridSize) {
@@ -119,14 +114,27 @@ function generatePointSubset(minX, maxX, minY, maxY, coordinates) {
       const point = polygonPoints[idx]
       const prevPoint = polygonPoints[idx === 0 ? polygonPoints.length - 1 : idx - 1]
       const nextPoint = polygonPoints[idx === polygonPoints.length - 1 ? 0 : idx + 1]
+
       if (isEntryPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint)) {
         pointSubset.push([point]);
         currentPathIdx++;
       } else if (
+        isInCorner(minX, maxX, minY, maxY, point) &&
+        !isInnerCorner(minX, maxX, minY, maxY, point, polygonPoints)
+      ) {
+        return null;
+      } else if (
+        isInCorner(minX, maxX, minY, maxY, point) &&
+        isBouncePoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) &&
+        isInnerCorner(minX, maxX, minY, maxY, point, polygonPoints)
+      ) {
+        pointSubset.push([point]);
+        currentPathIdx++;
+      } else if (
+        !isInCorner(minX, maxX, minY, maxY, point) &&
         isBouncePoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint)
       ) {
-        pointSubset.splice(0, 0, [point]);
-        currentPathIdx++;
+        return null;
       } else if (isInSquare(minX, maxX, minY, maxY, point)) {
         pointSubset[currentPathIdx].push(point);
       }
@@ -224,6 +232,7 @@ function buildAreaSplit(newData, cornerPoints, gridSize) {
       const newFeatures = newData.features.map((feature, idx) => {
         const cornerPointSubset = generateCornerPointsSubset(x, x + gridSize, y, y + gridSize, cornerPoints[idx]);
         const pointSubset = generatePointSubset(x, x + gridSize, y, y + gridSize, feature.geometry.coordinates);
+        if ((x === 70 && y === 10 && idx === 6) || (x === 30 && y === 10 && idx === 4)) console.log(x, pointSubset)
         const finalCoordinates = cornerPointMerger(x, x + gridSize, y, y + gridSize, pointSubset, cornerPointSubset);
         return {
           ...feature,
@@ -253,7 +262,7 @@ export default function split(data, gridSize) {
   let splittedData = [newData]
   try {
     splittedData = buildAreaSplit(newData, intersectionPoints, gridSize);
-    console.log(splittedData[7])
+    console.log(splittedData[28].features[2].geometry)
   } catch (e) {
     console.error(e)
   }
