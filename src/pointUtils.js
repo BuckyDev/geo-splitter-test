@@ -170,7 +170,7 @@ function isFirstPointInCrossingAdjacentPath(point, prevPoint, nextPoint, pointCl
   return false;
 }
 
-export function isPointInMiddle(startPoint, endPoint, point, commonCoord, progressCoord) {
+export function isPointStrictlyInMiddle(startPoint, endPoint, point, commonCoord, progressCoord) {
   return (((endPoint[progressCoord] < startPoint[progressCoord]) &&
     (point[progressCoord] < startPoint[progressCoord]) &&
     (point[progressCoord] > endPoint[progressCoord])) ||
@@ -189,14 +189,14 @@ export function crossPointNb(startPoint, endPoint, pointCloud) {
       const prevPoint = pointCloud[idx === 0 ? pointCloud.length - 1 : idx - 1]
       const nextPoint = pointCloud[idx === pointCloud.length - 1 ? 0 : idx + 1]
       if (
-        isPointInMiddle(startPoint, endPoint, prevPoint, commonCoord, progressCoord) ||
-        isPointInMiddle(startPoint, endPoint, nextPoint, commonCoord, progressCoord)
+        isPointStrictlyInMiddle(startPoint, endPoint, prevPoint, commonCoord, progressCoord) ||
+        isPointStrictlyInMiddle(startPoint, endPoint, nextPoint, commonCoord, progressCoord)
       ) {
         return true;
       }
     }
-    //Check is the point is in the middle
-    return isPointInMiddle(startPoint, endPoint, point, commonCoord, progressCoord)
+    //Check if the point is in the middle
+    return isPointStrictlyInMiddle(startPoint, endPoint, point, commonCoord, progressCoord)
   }).filter(point => {
     //Check if the inline points or bounce points should be counted
     const idx = findPointIndex(pointCloud, point);
@@ -207,6 +207,19 @@ export function crossPointNb(startPoint, endPoint, pointCloud) {
       !isInAdjacentPath(point, prevPoint, nextPoint, pointCloud, commonCoord)) ||
       isFirstPointInCrossingAdjacentPath(point, prevPoint, nextPoint, pointCloud, commonCoord)
   }).length
+}
+
+export function getPolygonOuterPoint(origin,polygonPoints,side){
+  switch(side){
+    case 'left':
+      return [min(polygonPoints, 0) - 1, origin[1]];
+    case 'right':
+      return [max(polygonPoints, 0) + 1, origin[1]];
+    case 'bottom':
+      return [origin[0], min(polygonPoints, 1) - 1];
+    case 'top':
+      return [origin[0], max(polygonPoints, 1) + 1];
+  }
 }
 
 export function isInnerCorner(minX, maxX, minY, maxY, point, polygonPoints) {
@@ -364,4 +377,20 @@ export function isCornerPointDirect(point, cornerPoint, pointCloud) {
         !arePointsAligned(cloudPoint, nextPoint, type) &&
         !isAdjacentAngle(cloudPoint, prevPoint, nextPoint, type)
     }).length === 0
+}
+
+export function hasFollowingPoint(minX, maxX, minY, maxY, origin, pointCloud){
+  const side = splitSquareSide2(minX, maxX, minY, maxY, origin);
+  return pointCloud.filter(point => {
+    switch (side) {
+      case 'left':
+        return point[0] === minX && point[1] > origin[1]
+      case 'right':
+        return point[0] === maxX && point[1] < origin[1]
+      case 'bottom':
+        return point[1] === minY && point[0] < origin[0]
+      case 'top':
+        return point[1] === maxY && point[0] > origin[0]
+    }
+  }).length > 0
 }

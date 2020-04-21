@@ -232,8 +232,7 @@ function buildAreaSplit(newData, cornerPoints, gridSize) {
       const newFeatures = newData.features.map((feature, idx) => {
         const cornerPointSubset = generateCornerPointsSubset(x, x + gridSize, y, y + gridSize, cornerPoints[idx]);
         const pointSubset = generatePointSubset(x, x + gridSize, y, y + gridSize, feature.geometry.coordinates);
-        if ((x === 70 && y === 10 && idx === 6) || (x === 30 && y === 10 && idx === 4)) console.log(x, pointSubset)
-        const finalCoordinates = cornerPointMerger(x, x + gridSize, y, y + gridSize, pointSubset, cornerPointSubset);
+        const finalCoordinates = cornerPointMerger(x, x + gridSize, y, y + gridSize, pointSubset, cornerPointSubset, feature.geometry.coordinates);
         return {
           ...feature,
           geometry: {

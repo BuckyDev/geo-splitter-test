@@ -11,10 +11,15 @@ import {
   arePointsEqual,
   substractArr,
   substractPoints,
+  flattenDoubleArray,
 } from './utils';
 
 import {
-  splitSquareSide2
+  isInCorner,
+  crossPointNb,
+  getPolygonOuterPoint,
+  splitSquareSide2,
+  hasFollowingPoint,
 } from './pointUtils';
 
 function orderCornerPoints(minX, maxX, minY, maxY, cornerPointSubset) {
@@ -26,6 +31,7 @@ function orderCornerPoints(minX, maxX, minY, maxY, cornerPointSubset) {
   return result;
 }
 
+//Functions for paths with corner points
 function findNextPoint(origin, minX, maxX, minY, maxY, pointSubset, orderedCornerPoints) {
   //Build an array of candidates
   let pointsToCheck = [];
@@ -102,7 +108,6 @@ export function buildPath(start, minX, maxX, minY, maxY, pointSubset, orderedCor
   let currentPoint = start;
   newPath.push(start)
 
-
   while (currentPoint) {
     const closestPoint = findNextPoint(currentPoint, minX, maxX, minY, maxY, pointSubset, orderedCornerPoints);
     currentPoint = closestPoint
@@ -112,11 +117,168 @@ export function buildPath(start, minX, maxX, minY, maxY, pointSubset, orderedCor
   return newPath;
 }
 
-function virtualCornerMerger(minX, maxX, minY, maxY, newSubset, pointSubset) {
-  
+//Functions for paths without corners
+function findDirection(point, minX, maxX, minY, maxY, pointSubset, featurePoints) {
+
+  const side = splitSquareSide2(minX, maxX, minY, maxY, point);
+
+  //Find end point in common side clockwise
+  let endPoint;
+  switch (side) {
+    case 'left':
+      endPoint = [maxX, minY];
+    case 'right':
+      endPoint = [minX, maxY];
+    case 'bottom':
+      endPoint = [minX, minY];
+    case 'top':
+      endPoint = [maxX, maxY];
+  }
+
+  //Count intermediary points under condition of path shape
+  let crossPointsCount = crossPointNb(point, endPoint, pointSubset);
+
+  //Process virtual point is a corner path point
+  if (includeArr(flattenDoubleArray(pointSubset), endPoint)) {
+    let reference;
+    switch (side) {
+      case 'left':
+        reference = getPolygonOuterPoint(origin, flattenDoubleArray(featurePoints), 'bottom');
+      case 'right':
+        reference = getPolygonOuterPoint(origin, flattenDoubleArray(featurePoints), 'top');
+      case 'bottom':
+        reference = getPolygonOuterPoint(origin, flattenDoubleArray(featurePoints), 'right');
+      case 'top':
+        reference = getPolygonOuterPoint(origin, flattenDoubleArray(featurePoints), 'left');
+    }
+    const isInside = crossPointNb(reference, endPoint, flattenDoubleArray(featurePoints)) % 2 === 1
+    if (isInside) {
+      crossPointsCount++;
+    }
+  }
+
+  //Return direction out of cross point count
+  return crossPointsCount % 2 === 1 ? 'clockwise' : 'anticlockwise'
 }
 
-export function cornerPointMerger(minX, maxX, minY, maxY, pointSubset, cornerPointSubset) {
+function findNextPointOnVirtual(origin, direction, minX, maxX, minY, maxY, pointSubset) {
+  //Build an array of candidates
+  let pointsToCheck = [];
+  pointSubset.map(path => {
+    pointsToCheck.push(path[0]);
+    if (path.length > 1) {
+      pointsToCheck.push(path[path.length - 1]);
+    }
+  })
+
+  const side = splitSquareSide2(minX, maxX, minY, maxY, origin);
+  //Filter candidate taking in count if the origin is in a corner
+  if (isInCorner(minX, maxX, minY, maxY, origin)) {
+    pointsToCheck = pointsToCheck.filter(point => {
+      switch (side) {
+        case 'left':
+          return direction === 'clockwise' ? (point[0] === minX && point[1] > origin[1]) : (point[1] === minY && point[0] > origin[0])
+        case 'right':
+          return direction === 'clockwise' ? (point[0] === maxX && point[1] < origin[1]) : (point[1] === maxY && point[0] < origin[0])
+        case 'bottom':
+          return direction === 'clockwise' ? (point[1] === minY && point[0] < origin[0]) : (point[0] === maxX && point[1] > origin[1])
+        case 'top':
+          return direction === 'clockwise' ? (point[1] === maxY && point[0] > origin[0]) : (point[0] === minX && point[1] < origin[1])
+      }
+    })
+  } else {
+    pointsToCheck = pointsToCheck.filter(point => {
+      switch (side) {
+        case 'left':
+          return point[0] === minX && (direction === 'clockwise' ? point[1] > origin[1] : point[1] < origin[1])
+        case 'right':
+          return point[0] === maxX && (direction === 'clockwise' ? point[1] < origin[1] : point[1] > origin[1])
+        case 'bottom':
+          return point[1] === minY && (direction === 'clockwise' ? point[0] < origin[0] : point[0] > origin[0])
+        case 'top':
+          return point[1] === maxY && (direction === 'clockwise' ? point[0] > origin[0] : point[0] < origin[0])
+      }
+    })
+  }
+
+  //Early return if no candidates
+  if (pointsToCheck.length === 0) {
+    return null;
+  }
+
+  //Find the closest point
+  let closestPoint;
+  let smallestDistance;
+  pointsToCheck.map(point => {
+    if (!closestPoint) {
+      smallestDistance = distance(origin, point)
+      closestPoint = point
+    } else if (distance(origin, point) < smallestDistance) {
+      smallestDistance = distance(origin, point)
+      closestPoint = point
+    }
+  })
+
+  return closestPoint;
+
+}
+
+function pushToPathAndReturnNextOnVirtual(newPath, closestPoint, pointSubset) {
+  let pointsToAdd = [];
+  pointSubset.map((path, idx) => {
+    if (arePointsEqual(path[0], closestPoint)) {
+      pointsToAdd = pointSubset[idx]
+      pointSubset.splice(idx, 1)
+    } else if (arePointsEqual(path[path.length - 1], closestPoint)) {
+      pointsToAdd = pointSubset[idx].reverse()
+      pointSubset.splice(idx, 1)
+    }
+  })
+
+  if (pointsToAdd.length > 0) {
+    pushArray(newPath, pointsToAdd)
+    return pointsToAdd[pointsToAdd.length - 1]
+  }
+}
+
+export function buildPathOnVirtual(minX, maxX, minY, maxY, pointSubset, featurePoints) {
+  //Setting up a start point to run the path builder
+  const virtualPoints = [
+    [minX, minY],
+    [minX, maxY],
+    [maxX, maxY],
+    [maxX, minY]
+  ]
+  let start;
+  let foundStartPoint;
+  virtualPoints.map(virtualPoint => {
+    if(
+      !foundStartPoint &&
+      hasFollowingPoint(minX, maxX, minY, maxY, virtualPoint, flattenDoubleArray(pointSubset))
+    ){
+      foundStartPoint=true
+      start=virtualPoint
+    }
+  })
+  
+  let newPath = [];
+  let currentPoint = start;
+
+  //Roam the path collection around the square
+  while (currentPoint) {
+    if(minX===30 && minY===0){console.log(currentPoint[0],currentPoint[1])}
+    const direction = currentPoint === start ? 'clockwise' : findDirection(currentPoint, minX, maxX, minY, maxY, pointSubset, featurePoints)
+    const closestPoint = findNextPointOnVirtual(currentPoint, direction, minX, maxX, minY, maxY, pointSubset);
+    if(closestPoint && !arePointsEqual(closestPoint,start)){
+      currentPoint = pushToPathAndReturnNextOnVirtual(newPath, closestPoint, pointSubset)
+    } else {
+      currentPoint = null;
+    }
+  }
+  return newPath;
+}
+
+export function cornerPointMerger(minX, maxX, minY, maxY, pointSubset, cornerPointSubset, featurePoints) {
   //Early returns
   if (pointSubset.length === 0 && cornerPointSubset.length === 0) return pointSubset; //Empty area
 
@@ -141,7 +303,16 @@ export function cornerPointMerger(minX, maxX, minY, maxY, pointSubset, cornerPoi
 
   //Handles multiple path exclusive polygons
   if (pointSubset.length > 0 && orderedCornerPoints.length === 0) {
-    virtualCornerMerger(minX, maxX, minY, maxY, newSubset, pointSubset)
-    return newSubset;
+    let dev = 0
+    while (pointSubset.length > 0 && dev<10) {
+      dev++;
+      const newPath = buildPathOnVirtual(minX, maxX, minY, maxY, pointSubset, featurePoints);
+      newSubset.push(newPath)
+    }
+    if(dev===1000){
+      console.log('infinite build path loop')
+      console.log(minX, maxX, minY, maxY)
+    }
   }
+  return newSubset;
 }
