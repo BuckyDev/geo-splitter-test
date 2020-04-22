@@ -266,7 +266,6 @@ export function buildPathOnVirtual(minX, maxX, minY, maxY, pointSubset, featureP
 
   //Roam the path collection around the square
   while (currentPoint) {
-    if(minX===30 && minY===0){console.log(currentPoint[0],currentPoint[1])}
     const direction = currentPoint === start ? 'clockwise' : findDirection(currentPoint, minX, maxX, minY, maxY, pointSubset, featurePoints)
     const closestPoint = findNextPointOnVirtual(currentPoint, direction, minX, maxX, minY, maxY, pointSubset);
     if(closestPoint && !arePointsEqual(closestPoint,start)){
@@ -303,15 +302,9 @@ export function cornerPointMerger(minX, maxX, minY, maxY, pointSubset, cornerPoi
 
   //Handles multiple path exclusive polygons
   if (pointSubset.length > 0 && orderedCornerPoints.length === 0) {
-    let dev = 0
-    while (pointSubset.length > 0 && dev<10) {
-      dev++;
+    while (pointSubset.length > 0) {
       const newPath = buildPathOnVirtual(minX, maxX, minY, maxY, pointSubset, featurePoints);
       newSubset.push(newPath)
-    }
-    if(dev===1000){
-      console.log('infinite build path loop')
-      console.log(minX, maxX, minY, maxY)
     }
   }
   return newSubset;

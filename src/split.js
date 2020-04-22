@@ -3,10 +3,6 @@ import {
   getSplitPoints,
   pushArray,
   mapFrom,
-  flattenDoubleArray,
-  substractArr,
-  includeArr,
-  arePointsEqual
 } from './utils';
 
 import {
@@ -15,16 +11,10 @@ import {
   getLeftPointsNb,
   getRightPointsNb,
   isEntryPoint,
-  isExitPoint,
   isBouncePoint,
   isInSquare,
-  isCornerPointDirect,
-  isCornerPath,
   isInnerCorner,
   isInCorner,
-  isStrictEntryPoint,
-  isStrictlyInSquare,
-  isStrictExitPoint
 } from './pointUtils';
 
 import {
@@ -147,84 +137,6 @@ function generateCornerPointsSubset(minX, maxX, minY, maxY, cornerPoints) {
   return cornerPoints.filter(point => isInSquare(minX, maxX, minY, maxY, point))
 }
 
-function mergeCornerPoints(minX, maxX, minY, maxY, pointSubset, cornerPointSubset) {
-  //Close polygons without corner points
-  if (cornerPointSubset.length === 0) {
-    const result = []
-    pointSubset.map(path => pushArray(result, path))
-    return [result]
-  }
-  //Close polygons with corner points and only one path
-  if (cornerPointSubset.length > 0 && pointSubset.length === 1) {
-    pointSubset.map((path, idx) => {
-      const pointCloud = flattenDoubleArray(pointSubset.filter((el, i) => i !== idx))
-      const toRemove = []
-      cornerPointSubset.map(cornerPoint => {
-        if (isCornerPointDirect(path[path.length - 1], cornerPoint, pointCloud)) {
-          path.push(cornerPoint);
-          toRemove.push(cornerPoint);
-        } else if (isCornerPointDirect(path[0], cornerPoint, pointCloud)) {
-          path.splice(0, 0, cornerPoint);
-          toRemove.push(cornerPoint);
-        }
-      })
-      substractArr(cornerPointSubset, toRemove);
-    })
-    return pointSubset
-  }
-  //Close polygons with only 4 corner points
-  if (cornerPointSubset.length === 4 && pointSubset.length === 0) {
-    const result = [cornerPointSubset.pop()];
-    genArray(0, 2, 1).map(() => {
-      const idx = cornerPointSubset.findIndex(el =>
-        (el[0] === result[result.length - 1][0] ||
-          el[1] === result[result.length - 1][1]) &&
-        !includeArr(result, el)
-      )
-
-      if (idx > -1) {
-        result.push(cornerPointSubset[idx])
-        cornerPointSubset.splice(idx, 0)
-      }
-    })
-    return [result];
-  }
-
-  //Close multipath polygons without corner points
-  if (cornerPointSubset.length === 0 && pointSubset.length > 1) {
-
-  }
-
-  //Close multipath polygons with corner points
-  if (cornerPointSubset.length > 0 && pointSubset.length > 1) {
-    //Close simple corner path
-    pointSubset.map((path, idx) => {
-      if (isCornerPath(minX, maxX, minY, maxY, path)) {
-        const pointCloud = flattenDoubleArray(pointSubset.filter((el, i) => i !== idx))
-        let foundCornerPoint = null;
-        cornerPointSubset.map(cornerPoint => {
-          if (
-            isCornerPointDirect(path[0], cornerPoint, pointCloud) &&
-            isCornerPointDirect(path[path.length - 1], cornerPoint, pointCloud) &&
-            !foundCornerPoint
-          ) {
-            foundCornerPoint = cornerPoint
-          }
-        })
-        if (foundCornerPoint) {
-          path.push(foundCornerPoint);
-          substractArr(cornerPointSubset, [foundCornerPoint]);
-        }
-      }
-    })
-    return pointSubset
-
-  }
-
-  //Default
-  return pointSubset
-}
-
 function buildAreaSplit(newData, cornerPoints, gridSize) {
   const areas = [];
   genArray(0, 90, gridSize).map(x => {
@@ -261,7 +173,7 @@ export default function split(data, gridSize) {
   let splittedData = [newData]
   try {
     splittedData = buildAreaSplit(newData, intersectionPoints, gridSize);
-    console.log(splittedData[28].features[2].geometry)
+    console.log(splittedData[17].features[8].geometry)
   } catch (e) {
     console.error(e)
   }
