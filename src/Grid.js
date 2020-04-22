@@ -13,7 +13,7 @@ class Grid extends Component {
   constructor(){
     super();
     this.state = {
-      splitted: split(fullSample, 10)
+      splitted: split(fullSample, 0, 100, 0, 50, 10)
     }
   }
 

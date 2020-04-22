@@ -69,10 +69,10 @@ function isPointInside(testPoint, feature) {
   }).includes(true);
 }
 
-function generateIntersectionPoints(data, gridSize) {
+function generateIntersectionPoints(data, xStart, xEnd, yStart, yEnd, gridSize) {
   const pointsToTest = []
-  genArray(0, 100, gridSize).map(x => {
-    genArray(0, 50, gridSize).map(y => {
+  genArray(xStart, xEnd, gridSize).map(x => {
+    genArray(yStart, yEnd, gridSize).map(y => {
       pointsToTest.push([x, y])
     })
   })
@@ -137,10 +137,10 @@ function generateCornerPointsSubset(minX, maxX, minY, maxY, cornerPoints) {
   return cornerPoints.filter(point => isInSquare(minX, maxX, minY, maxY, point))
 }
 
-function buildAreaSplit(newData, cornerPoints, gridSize) {
+function buildAreaSplit(newData, cornerPoints, xStart, xEnd, yStart, yEnd, gridSize) {
   const areas = [];
-  genArray(0, 90, gridSize).map(x => {
-    genArray(0, 40, gridSize).map(y => {
+  genArray(xStart, xEnd-gridSize, gridSize).map(x => {
+    genArray(yStart, yEnd-gridSize, gridSize).map(y => {
       const newFeatures = newData.features.map((feature, idx) => {
         const cornerPointSubset = generateCornerPointsSubset(x, x + gridSize, y, y + gridSize, cornerPoints[idx]);
         const pointSubset = generatePointSubset(x, x + gridSize, y, y + gridSize, feature.geometry.coordinates);
@@ -163,19 +163,13 @@ function buildAreaSplit(newData, cornerPoints, gridSize) {
 }
 
 //Final function
-export default function split(data, gridSize) {
+export default function split(data, xStart, xEnd, yStart, yEnd, gridSize) {
   const splitPointsData = addSplitPointsAll(data, gridSize);
   const newData = {
     ...data,
     features: splitPointsData,
   }
-  const intersectionPoints = generateIntersectionPoints(newData, gridSize);
-  let splittedData = [newData]
-  try {
-    splittedData = buildAreaSplit(newData, intersectionPoints, gridSize);
-    console.log(splittedData[17].features[8].geometry)
-  } catch (e) {
-    console.error(e)
-  }
+  const intersectionPoints = generateIntersectionPoints(newData, xStart, xEnd, yStart, yEnd, gridSize);
+  const splittedData = buildAreaSplit(newData, intersectionPoints, xStart, xEnd, yStart, yEnd, gridSize);
   return splittedData;
 }

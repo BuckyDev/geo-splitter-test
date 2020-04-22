@@ -9,7 +9,6 @@ import {
   pushArray,
   distance,
   arePointsEqual,
-  substractArr,
   substractPoints,
   flattenDoubleArray,
 } from './utils';
