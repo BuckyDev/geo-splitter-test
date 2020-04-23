@@ -2,10 +2,20 @@ import React, { Component } from 'react';
 
 import * as d3 from 'd3';
 
-import fullSample from './polygon/fullSample';
+import fullSample from './fullSample';
 
-var split = require('./split').split
-var genArray = require('./utils').genArray
+var split = require('geo-splitter').split
+
+function genArray(start, stop, diff) {
+  let arr = [];
+  let value = start;
+  while (value <= stop) {
+    arr.push(value);
+    value = value + diff;
+  }
+  return arr;
+}
+
 
 function randomColor() {
   return `rgb(${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50})`
