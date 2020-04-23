@@ -1,25 +1,19 @@
-import {
-  genArray,
-  getSplitPoints,
-  pushArray,
-  mapFrom,
-} from './utils';
+var cornerPointMerger = require('./cornerPointMerger').cornerPointMerger
 
-import {
-  getUpPointsNb,
-  getDownPointsNb,
-  getLeftPointsNb,
-  getRightPointsNb,
-  isEntryPoint,
-  isBouncePoint,
-  isInSquare,
-  isInnerCorner,
-  isInCorner,
-} from './pointUtils';
+var getUpPointsNb = require('./pointUtils').getUpPointsNb
+var getDownPointsNb = require('./pointUtils').getDownPointsNb
+var getLeftPointsNb = require('./pointUtils').getLeftPointsNb
+var getRightPointsNb = require('./pointUtils').getRightPointsNb
+var isEntryPoint = require('./pointUtils').isEntryPoint
+var isBouncePoint = require('./pointUtils').isBouncePoint
+var isInSquare = require('./pointUtils').isInSquare
+var isInnerCorner = require('./pointUtils').isInnerCorner
+var isInCorner = require('./pointUtils').isInCorner
 
-import {
-  cornerPointMerger
-} from './cornerPointMerger';
+var genArray = require('./utils').genArray
+var getSplitPoints = require('./utils').getSplitPoints
+var pushArray = require('./utils').pushArray
+var mapFrom = require('./utils').mapFrom
 
 //Add all missing crossborder points for a polygon
 function addSplitPointFeature(coordinates, gridSize) {
@@ -163,7 +157,7 @@ function buildAreaSplit(newData, cornerPoints, xStart, xEnd, yStart, yEnd, gridS
 }
 
 //Final function
-export default function split(data, xStart, xEnd, yStart, yEnd, gridSize) {
+function split(data, xStart, xEnd, yStart, yEnd, gridSize) {
   const splitPointsData = addSplitPointsAll(data, gridSize);
   const newData = {
     ...data,
@@ -172,4 +166,8 @@ export default function split(data, xStart, xEnd, yStart, yEnd, gridSize) {
   const intersectionPoints = generateIntersectionPoints(newData, xStart, xEnd, yStart, yEnd, gridSize);
   const splittedData = buildAreaSplit(newData, intersectionPoints, xStart, xEnd, yStart, yEnd, gridSize);
   return splittedData;
+}
+
+module.exports = {
+  split
 }

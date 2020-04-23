@@ -1,23 +1,21 @@
-import {
-  includeArr,
-  min,
-  max,
-  findPointIndex,
-  mapFrom,
-  arePointsEqual,
-} from './utils'
+var includeArr = require('./utils').includeArr
+var min = require('./utils').min
+var max = require('./utils').max
+var findPointIndex = require('./utils').findPointIndex
+var mapFrom = require('./utils').mapFrom
+var arePointsEqual = require('./utils').arePointsEqual
 
 //If a point is on a grid line
-export function isSplitPoint(point, gridSize) {
+function isSplitPoint(point, gridSize) {
   return point[0] % gridSize === 0 || point[1] % gridSize === 0
 };
 
-export function isOnSquareSide(minX, maxX, minY, maxY, point) {
+function isOnSquareSide(minX, maxX, minY, maxY, point) {
   const validCoord = [minX, maxX, minY, maxY];
   return validCoord.includes(point[0]) || validCoord.includes(point[1])
 };
 
-export function isAdjacentAngle(point, prevPoint, nextPoint, type) {
+function isAdjacentAngle(point, prevPoint, nextPoint, type) {
   const coord = type === 'vertical' ? 0 : 1;
 
   return ((prevPoint[coord] > point[coord]) &&
@@ -26,14 +24,14 @@ export function isAdjacentAngle(point, prevPoint, nextPoint, type) {
       (nextPoint[coord] < point[coord]))
 };
 
-export function isInSquare(minX, maxX, minY, maxY, point) {
+function isInSquare(minX, maxX, minY, maxY, point) {
   return point[0] >= minX &&
     point[0] <= maxX &&
     point[1] >= minY &&
     point[1] <= maxY
 }
 
-export function isStrictlyInSquare(minX, maxX, minY, maxY, point) {
+function isStrictlyInSquare(minX, maxX, minY, maxY, point) {
   return point[0] > minX &&
     point[0] < maxX &&
     point[1] > minY &&
@@ -42,7 +40,7 @@ export function isStrictlyInSquare(minX, maxX, minY, maxY, point) {
 
 //Gives the side of the square on which the split point is
 //Do not handle corners !!!
-export function splitSquareSide(minX, maxX, minY, maxY, splitPoint) {
+function splitSquareSide(minX, maxX, minY, maxY, splitPoint) {
   if (splitPoint[0] === minX) {
     return 'left'
   }
@@ -58,7 +56,7 @@ export function splitSquareSide(minX, maxX, minY, maxY, splitPoint) {
 }
 
 //Handle corners with selection of the belonging side
-export function splitSquareSide2(minX, maxX, minY, maxY, splitPoint) {
+function splitSquareSide2(minX, maxX, minY, maxY, splitPoint) {
   if (splitPoint[0] === minX && splitPoint[1] < maxY) { return 'left' }
   if (splitPoint[0] === maxX && splitPoint[1] > minY) { return 'right' }
   if (splitPoint[1] === minY && splitPoint[0] > minX) { return 'bottom' }
@@ -67,7 +65,7 @@ export function splitSquareSide2(minX, maxX, minY, maxY, splitPoint) {
 
 const SQUARE = ['top', 'right', 'bottom', 'left'];
 
-export function isCornerPath(minX, maxX, minY, maxY, path) {
+function isCornerPath(minX, maxX, minY, maxY, path) {
   const startPoint = path[0];
   const endPoint = path[path.length - 1];
   const startSide = splitSquareSide(minX, maxX, minY, maxY, startPoint);
@@ -80,12 +78,12 @@ export function isCornerPath(minX, maxX, minY, maxY, path) {
 }
 
 //Gives if the point is at the corner of the square
-export function isInCorner(minX, maxX, minY, maxY, point) {
+function isInCorner(minX, maxX, minY, maxY, point) {
   const validCoord = [minX, maxX, minY, maxY];
   return validCoord.includes(point[0]) && validCoord.includes(point[1])
 }
 
-export function followingCorner(minX, maxX, minY, maxY, point) {
+function followingCorner(minX, maxX, minY, maxY, point) {
   const side = splitSquareSide2(minX, maxX, minY, maxY, point);
   switch (side) {
     case 'left':
@@ -99,7 +97,7 @@ export function followingCorner(minX, maxX, minY, maxY, point) {
   }
 }
 
-export function isVirtual(point, cornerPoints) {
+function isVirtual(point, cornerPoints) {
   return includeArr(cornerPoints, point);
 }
 
@@ -170,7 +168,7 @@ function isFirstPointInCrossingAdjacentPath(point, prevPoint, nextPoint, pointCl
   return false;
 }
 
-export function isPointStrictlyInMiddle(startPoint, endPoint, point, commonCoord, progressCoord) {
+function isPointStrictlyInMiddle(startPoint, endPoint, point, commonCoord, progressCoord) {
   return (((endPoint[progressCoord] < startPoint[progressCoord]) &&
     (point[progressCoord] < startPoint[progressCoord]) &&
     (point[progressCoord] > endPoint[progressCoord])) ||
@@ -180,7 +178,7 @@ export function isPointStrictlyInMiddle(startPoint, endPoint, point, commonCoord
     (point[commonCoord] === startPoint[commonCoord])
 }
 
-export function crossPointNb(startPoint, endPoint, pointCloud) {
+function crossPointNb(startPoint, endPoint, pointCloud) {
   const commonCoord = startPoint[0] === endPoint[0] ? 0 : 1;
   const progressCoord = startPoint[0] === endPoint[0] ? 1 : 0;
   return pointCloud.filter((point, idx) => {
@@ -209,8 +207,8 @@ export function crossPointNb(startPoint, endPoint, pointCloud) {
   }).length
 }
 
-export function getPolygonOuterPoint(origin,polygonPoints,side){
-  switch(side){
+function getPolygonOuterPoint(origin, polygonPoints, side) {
+  switch (side) {
     case 'left':
       return [min(polygonPoints, 0) - 1, origin[1]];
     case 'right':
@@ -222,7 +220,7 @@ export function getPolygonOuterPoint(origin,polygonPoints,side){
   }
 }
 
-export function isInnerCorner(minX, maxX, minY, maxY, point, polygonPoints) {
+function isInnerCorner(minX, maxX, minY, maxY, point, polygonPoints) {
   const topRef = [point[0], max(polygonPoints, 1) + 1];
   const bottomRef = [point[0], min(polygonPoints, 1) - 1];
   const rightRef = [max(polygonPoints, 0) + 1, point[1]];
@@ -246,35 +244,35 @@ export function isInnerCorner(minX, maxX, minY, maxY, point, polygonPoints) {
   }
 }
 
-export function isBouncePoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
+function isBouncePoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
   return isInSquare(minX, maxX, minY, maxY, point) &&
     !isInSquare(minX, maxX, minY, maxY, nextPoint) &&
     !isInSquare(minX, maxX, minY, maxY, prevPoint)
 }
 
-export function isEntryPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
+function isEntryPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
   return isInSquare(minX, maxX, minY, maxY, point) &&
     isInSquare(minX, maxX, minY, maxY, nextPoint) &&
     !isInSquare(minX, maxX, minY, maxY, prevPoint)
 }
 
-export function isStrictEntryPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
+function isStrictEntryPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
   return isInSquare(minX, maxX, minY, maxY, point) &&
     (
-      isStrictlyInSquare(minX, maxX, minY, maxY, nextPoint) || 
+      isStrictlyInSquare(minX, maxX, minY, maxY, nextPoint) ||
       (isOnSquareSide(minX, maxX, minY, maxY, nextPoint) &&
-      splitSquareSide2(minX, maxX, minY, maxY, nextPoint) !== splitSquareSide2(minX, maxX, minY, maxY, point))
-      ) &&
+        splitSquareSide2(minX, maxX, minY, maxY, nextPoint) !== splitSquareSide2(minX, maxX, minY, maxY, point))
+    ) &&
     !isStrictlyInSquare(minX, maxX, minY, maxY, prevPoint)
 }
 
-export function isExitPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
+function isExitPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
   return isInSquare(minX, maxX, minY, maxY, point) &&
     !isInSquare(minX, maxX, minY, maxY, nextPoint) &&
     isInSquare(minX, maxX, minY, maxY, prevPoint)
 }
 
-export function isStrictExitPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
+function isStrictExitPoint(minX, maxX, minY, maxY, point, prevPoint, nextPoint) {
   return isInSquare(minX, maxX, minY, maxY, point) &&
     !isInSquare(minX, maxX, minY, maxY, nextPoint) &&
     isStrictlyInSquare(minX, maxX, minY, maxY, prevPoint)
@@ -282,7 +280,7 @@ export function isStrictExitPoint(minX, maxX, minY, maxY, point, prevPoint, next
 
 //Get relative points
 
-export function getUpPointsNb(testPoint, pointCloud) {
+function getUpPointsNb(testPoint, pointCloud) {
   return pointCloud.filter((point, idx) => {
     const prevPoint = pointCloud[idx === 0 ? pointCloud.length - 1 : idx - 1]
     const nextPoint = pointCloud[idx === pointCloud.length - 1 ? 0 : idx + 1]
@@ -294,7 +292,7 @@ export function getUpPointsNb(testPoint, pointCloud) {
   }).length
 }
 
-export function getDownPointsNb(testPoint, pointCloud) {
+function getDownPointsNb(testPoint, pointCloud) {
   return pointCloud.filter((point, idx) => {
     const prevPoint = pointCloud[idx === 0 ? pointCloud.length - 1 : idx - 1]
     const nextPoint = pointCloud[idx === pointCloud.length - 1 ? 0 : idx + 1]
@@ -306,7 +304,7 @@ export function getDownPointsNb(testPoint, pointCloud) {
   }).length
 }
 
-export function getLeftPointsNb(testPoint, pointCloud) {
+function getLeftPointsNb(testPoint, pointCloud) {
   return pointCloud.filter((point, idx) => {
     const prevPoint = pointCloud[idx === 0 ? pointCloud.length - 1 : idx - 1]
     const nextPoint = pointCloud[idx === pointCloud.length - 1 ? 0 : idx + 1]
@@ -318,7 +316,7 @@ export function getLeftPointsNb(testPoint, pointCloud) {
   }).length
 }
 
-export function getRightPointsNb(testPoint, pointCloud) {
+function getRightPointsNb(testPoint, pointCloud) {
   return pointCloud.filter((point, idx) => {
     const prevPoint = pointCloud[idx === 0 ? pointCloud.length - 1 : idx - 1]
     const nextPoint = pointCloud[idx === pointCloud.length - 1 ? 0 : idx + 1]
@@ -331,7 +329,7 @@ export function getRightPointsNb(testPoint, pointCloud) {
 }
 
 //Gives on which grid line that split point belongs
-export function splitPointType(point, gridSize) {
+function splitPointType(point, gridSize) {
   if (point[0] % gridSize === 0 && point[1] % gridSize === 0) {
     return 'double'
   }
@@ -347,14 +345,14 @@ export function splitPointType(point, gridSize) {
 }
 
 //Gives if 2 two points are aligned in a given axis
-export function arePointsAligned(pointA, pointB, type) {
+function arePointsAligned(pointA, pointB, type) {
   const coord = type === 'vertical' ? 0 : 1;
   return pointA[coord] === pointB[coord];
 }
 
 //If a polygon point is a split point and both closest neibhors are on the same side of the gridline
 
-export function isCornerPointDirect(point, cornerPoint, pointCloud) {
+function isCornerPointDirect(point, cornerPoint, pointCloud) {
   if (!arePointsAligned(point, cornerPoint, 'vertical') && !arePointsAligned(point, cornerPoint, 'horizontal')) {
     return false;
   }
@@ -379,7 +377,7 @@ export function isCornerPointDirect(point, cornerPoint, pointCloud) {
     }).length === 0
 }
 
-export function hasFollowingPoint(minX, maxX, minY, maxY, origin, pointCloud){
+function hasFollowingPoint(minX, maxX, minY, maxY, origin, pointCloud) {
   const side = splitSquareSide2(minX, maxX, minY, maxY, origin);
   return pointCloud.filter(point => {
     switch (side) {
@@ -393,4 +391,35 @@ export function hasFollowingPoint(minX, maxX, minY, maxY, origin, pointCloud){
         return point[1] === maxY && point[0] > origin[0]
     }
   }).length > 0
+}
+
+module.exports={
+  isSplitPoint,
+  isOnSquareSide,
+  isAdjacentAngle,
+  isInSquare,
+  isStrictlyInSquare,
+  splitSquareSide,
+  splitSquareSide2,
+  isCornerPath,
+  isInCorner,
+  followingCorner,
+  isVirtual,
+  isPointStrictlyInMiddle,
+  crossPointNb,
+  getPolygonOuterPoint,
+  isInnerCorner,
+  isBouncePoint,
+  isEntryPoint,
+  isStrictEntryPoint,
+  isExitPoint,
+  isStrictExitPoint,
+  getUpPointsNb,
+  getDownPointsNb,
+  getLeftPointsNb,
+  getRightPointsNb,
+  splitPointType,
+  arePointsAligned,
+  isCornerPointDirect,
+  hasFollowingPoint,
 }

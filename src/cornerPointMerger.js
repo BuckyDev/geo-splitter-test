@@ -4,22 +4,19 @@
   respectively inside or outide a polygon
 */
 
-import {
-  includeArr,
-  pushArray,
-  distance,
-  arePointsEqual,
-  substractPoints,
-  flattenDoubleArray,
-} from './utils';
+var isInCorner = require('./pointUtils').isInCorner
+var crossPointNb = require('./pointUtils').crossPointNb
+var getPolygonOuterPoint = require('./pointUtils').getPolygonOuterPoint
+var splitSquareSide2 = require('./pointUtils').splitSquareSide2
+var hasFollowingPoint = require('./pointUtils').hasFollowingPoint
 
-import {
-  isInCorner,
-  crossPointNb,
-  getPolygonOuterPoint,
-  splitSquareSide2,
-  hasFollowingPoint,
-} from './pointUtils';
+var includeArr = require('./utils').includeArr
+var pushArray = require('./utils').pushArray
+var distance = require('./utils').distance
+var arePointsEqual = require('./utils').arePointsEqual
+var substractPoints = require('./utils').substractPoints
+var flattenDoubleArray = require('./utils').flattenDoubleArray
+
 
 function orderCornerPoints(minX, maxX, minY, maxY, cornerPointSubset) {
   const result = [];
@@ -102,7 +99,7 @@ function pushToPathAndReturnNext(newPath, closestPoint, pointSubset, orderedCorn
   }
 }
 
-export function buildPath(start, minX, maxX, minY, maxY, pointSubset, orderedCornerPoints) {
+function buildPath(start, minX, maxX, minY, maxY, pointSubset, orderedCornerPoints) {
   let newPath = [];
   let currentPoint = start;
   newPath.push(start)
@@ -240,7 +237,7 @@ function pushToPathAndReturnNextOnVirtual(newPath, closestPoint, pointSubset) {
   }
 }
 
-export function buildPathOnVirtual(minX, maxX, minY, maxY, pointSubset, featurePoints) {
+function buildPathOnVirtual(minX, maxX, minY, maxY, pointSubset, featurePoints) {
   //Setting up a start point to run the path builder
   const virtualPoints = [
     [minX, minY],
@@ -276,7 +273,7 @@ export function buildPathOnVirtual(minX, maxX, minY, maxY, pointSubset, featureP
   return newPath;
 }
 
-export function cornerPointMerger(minX, maxX, minY, maxY, pointSubset, cornerPointSubset, featurePoints) {
+function cornerPointMerger(minX, maxX, minY, maxY, pointSubset, cornerPointSubset, featurePoints) {
   //Early returns
   if (pointSubset.length === 0 && cornerPointSubset.length === 0) return pointSubset; //Empty area
 
@@ -307,4 +304,8 @@ export function cornerPointMerger(minX, maxX, minY, maxY, pointSubset, cornerPoi
     }
   }
   return newSubset;
+}
+
+module.exports = {
+  cornerPointMerger
 }

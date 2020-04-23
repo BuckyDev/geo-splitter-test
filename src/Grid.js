@@ -3,11 +3,13 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 
 import fullSample from './polygon/fullSample';
-import split from './split';
-import {
-  genArray,
-  randomColor
-} from './utils';
+
+var split = require('./split').split
+var genArray = require('./utils').genArray
+
+function randomColor() {
+  return `rgb(${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50})`
+}
 
 class Grid extends Component {
   constructor(){

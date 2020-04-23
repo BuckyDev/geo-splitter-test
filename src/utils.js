@@ -1,8 +1,4 @@
-export function randomColor() {
-  return `rgb(${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50})`
-}
-
-export function max(pointArray, coord) {
+function max(pointArray, coord) {
   let max;
   pointArray.map(pt => {
     if (!max) {
@@ -14,7 +10,7 @@ export function max(pointArray, coord) {
   return max;
 }
 
-export function min(pointArray, coord) {
+function min(pointArray, coord) {
   let min;
   pointArray.map(pt => {
     if (!min) {
@@ -26,13 +22,13 @@ export function min(pointArray, coord) {
   return min;
 }
 
-export function flattenDoubleArray(arr) {
+function flattenDoubleArray(arr) {
   const result = [];
   arr.map(innerArr => innerArr.map(el => result.push(el)))
   return result;
 }
 
-export function substractArr(resultArr, removedArr) {
+function substractArr(resultArr, removedArr) {
   removedArr.map(val => {
     const idx = resultArr.indexOf(val)
     if (idx > -1) {
@@ -41,7 +37,7 @@ export function substractArr(resultArr, removedArr) {
   })
 }
 
-export function findPointIndex(pointArr, point) {
+function findPointIndex(pointArr, point) {
   let index = -1
   pointArr.map((el, idx) => {
     if (index === -1 && arePointsEqual(el, point)) {
@@ -51,7 +47,7 @@ export function findPointIndex(pointArr, point) {
   return index;
 }
 
-export function substractPoints(resultPointArr, removedPointArr) {
+function substractPoints(resultPointArr, removedPointArr) {
   removedPointArr.map(val => {
     const idx = findPointIndex(resultPointArr, val)
     if (idx > -1) {
@@ -60,7 +56,7 @@ export function substractPoints(resultPointArr, removedPointArr) {
   })
 }
 
-export function mapFrom(arr, start, callback) {
+function mapFrom(arr, start, callback) {
   const length = arr.length;
   return arr.map((val, idx) => {
     const newIdx = idx + start < length ? idx + start : idx + start - length
@@ -68,7 +64,7 @@ export function mapFrom(arr, start, callback) {
   })
 }
 
-export function genArray(start, stop, diff) {
+function genArray(start, stop, diff) {
   let arr = [];
   let value = start;
   while (value <= stop) {
@@ -78,7 +74,7 @@ export function genArray(start, stop, diff) {
   return arr;
 }
 
-export function pushArray(arr1, arr2) {
+function pushArray(arr1, arr2) {
   arr2.map(el => arr1.push(el))
 }
 
@@ -93,19 +89,19 @@ function eqArr(arr1, arr2) {
   return arr1.every((el, idx) => el === arr2[idx]);
 }
 
-export function arePointsEqual(p1, p2) {
+function arePointsEqual(p1, p2) {
   return eqArr(p1, p2);
 }
 
-export function distance(p1, p2) {
+function distance(p1, p2) {
   return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2))
 }
 
-export function includeArr(arr, val) {
+function includeArr(arr, val) {
   return !!arr.find(el => eqArr(el, val));
 }
 
-export function getSplitPoints(segment, gridSize) {
+function getSplitPoints(segment, gridSize) {
   const x1 = segment[0][0];
   const y1 = segment[0][1];
   const x2 = segment[1][0];
@@ -141,4 +137,20 @@ export function getSplitPoints(segment, gridSize) {
   }
 
   return points;
+}
+
+module.exports = {
+  max,
+  min,
+  flattenDoubleArray,
+  substractArr,
+  findPointIndex,
+  substractPoints,
+  mapFrom,
+  genArray,
+  pushArray,
+  arePointsEqual,
+  distance,
+  includeArr,
+  getSplitPoints,
 }
