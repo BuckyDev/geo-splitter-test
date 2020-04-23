@@ -16,7 +16,6 @@ function genArray(start, stop, diff) {
   return arr;
 }
 
-
 function randomColor() {
   return `rgb(${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50})`
 }
