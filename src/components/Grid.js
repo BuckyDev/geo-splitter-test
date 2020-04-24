@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 
 import * as d3 from 'd3';
 
-import fullSample from './fullSample';
-
 var split = require('geo-splitter').split
 
 function genArray(start, stop, diff) {
@@ -17,52 +15,56 @@ function genArray(start, stop, diff) {
 }
 
 function randomColor() {
-  return `rgb(${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50},${Math.floor(Math.random() * 205)+50})`
+  return `rgb(${Math.floor(Math.random() * 205) + 50},${Math.floor(Math.random() * 205) + 50},${Math.floor(Math.random() * 205) + 50})`
 }
 
 class Grid extends Component {
-  constructor(){
-    super();
-    this.state = {
-      splitted: split(fullSample, 0, 100, 0, 50, 10)
+  constructor(props) {
+    super(props);
+    if (props.type === 'splitted') {
+      this.state = {
+        splitted: split(props.data, props.xMin, props.xMax, props.yMin, props.yMax, props.gridSize)
+      }
     }
   }
 
   renderHorizontalGridLines() {
-    const arr = genArray(0, 50, 1)
+    const { yMin, yMax, gridSize } = this.props;
+    const arr = genArray(yMin, yMax, 1)
     return arr.map((val) => (
       <path
-        stroke={val % 10 === 0 ? 'white' : 'gray'}
-        stroke-width={val % 10 === 0 ? '2' : '1'}
+        stroke={val % gridSize === 0 ? 'white' : 'gray'}
+        stroke-width={val % gridSize === 0 ? '2' : '1'}
         d={`M0 ${10 * val} L1000 ${10 * val} Z`}
       />
     ))
   }
 
   renderVerticalGridLines() {
-    const arr = genArray(0, 100, 1)
+    const { xMin, xMax, gridSize } = this.props;
+    const arr = genArray(xMin, xMax, 1)
     return arr.map((val) => (
       <path
-        stroke={val % 10 === 0 ? 'white' : 'gray'}
-        stroke-width={val % 10 === 0 ? '2' : '1'}
+        stroke={val % gridSize === 0 ? 'white' : 'gray'}
+        stroke-width={val % gridSize === 0 ? '2' : '1'}
         d={`M${10 * val} 0 L${10 * val} 500 Z`}
       />
     ))
   }
 
   renderFullSamplePolygons() {
-    return fullSample.features.map(feature => {
+    return this.props.data.features.map(feature => {
       return feature.geometry.coordinates.map(polygon => {
-        const path = d3.line()(polygon.map(coord => [coord[0] * 10, 500 - coord[1] * 10]))
+        const path = d3.line()(polygon.map(coord => [coord[0] * 10, (this.props.yMax - coord[1]) * 10]))
         return <path d={path} stroke="none" fill="#e2980c" />
       })
     })
   }
 
   renderFullSamplePoints() {
-    return fullSample.features.map(feature => {
+    return this.props.data.features.map(feature => {
       return feature.geometry.coordinates.map(polygon => polygon
-        .map(coord => <circle cx={coord[0] * 10} cy={500 - coord[1] * 10} r="4" stroke="none" fill="white" />)
+        .map(coord => <circle cx={coord[0] * 10} cy={(this.props.yMax - coord[1]) * 10} r="4" stroke="none" fill="white" />)
       )
     })
   }
@@ -72,7 +74,7 @@ class Grid extends Component {
       const color = randomColor();
       return file.features.map(feature => {
         return feature.geometry.coordinates.map(polygon => {
-          const path = d3.line()(polygon.map(coord => [coord[0] * 10, 500 - coord[1] * 10]))
+          const path = d3.line()(polygon.map(coord => [coord[0] * 10, (this.props.yMax - coord[1]) * 10]))
           return <path d={path} stroke="none" fill={color} />
         })
       })
@@ -83,7 +85,7 @@ class Grid extends Component {
     return this.state.splitted.map(file => {
       return file.features.map(feature => {
         return feature.geometry.coordinates.map(polygon => polygon
-          .map(coord => <circle cx={coord[0] * 10} cy={500 - coord[1] * 10} r="4" stroke="none" fill="white" />)
+          .map(coord => <circle cx={coord[0] * 10} cy={(this.props.yMax - coord[1]) * 10} r="4" stroke="none" fill="white" />)
         )
       })
     })
@@ -114,8 +116,9 @@ class Grid extends Component {
   }
 
   render() {
+    const { xMin, xMax, yMin, yMax} = this.props;
     return (
-      <svg height='500' width='1000'>
+      <svg height={(yMax - yMin) * 10} width={(xMax - xMin) * 10}>
         {this.renderPolygons()}
         {this.renderHorizontalGridLines()}
         {this.renderVerticalGridLines()}
