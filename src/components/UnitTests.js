@@ -27,7 +27,6 @@ class UnitTests extends Component {
         />
         <TestSection
           outputType='array'
-          isInitiallyOpened={true}
           sectionTitle='Generate corner points'
           subTitle='generateCornerPoints(data, xStart, xEnd, yStart, yEnd, gridSize)'
           testFunction={stuff => generateCornerPoints(stuff.data, stuff.xStart, stuff.xEnd, stuff.yStart, stuff.yEnd, stuff.gridSize)}
