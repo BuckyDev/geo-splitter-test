@@ -18,36 +18,36 @@ export const splitData = [
   {
     title: 'General case',
     input: {data: input1, gridSize: 6},
-    expectedOutput: {data: expectedOutput1},
+    expectedOutput: expectedOutput1,
   },
   {
     title: 'Points on limits',
     input: {data: input2, gridSize: 6},
-    expectedOutput: {data: expectedOutput2},
+    expectedOutput: expectedOutput2,
   },
   {
     title: 'Paths on limits',
     input: {data: input3, gridSize: 6},
-    expectedOutput: {data: expectedOutput3},
+    expectedOutput: expectedOutput3,
   },
   {
     title: 'Points on angles',
     input: {data: input4, gridSize: 6},
-    expectedOutput: {data: expectedOutput4},
+    expectedOutput: expectedOutput4,
   },
   {
     title: 'Paths crossing angles',
     input: {data: input5, gridSize: 6},
-    expectedOutput: {data: expectedOutput5},
+    expectedOutput: expectedOutput5,
   },
   {
     title: 'Paths crossing perp limits',
     input: {data: input6, gridSize: 6},
-    expectedOutput: {data: expectedOutput6},
+    expectedOutput: expectedOutput6,
   },
   {
     title: 'Paths crossing parallel limits',
     input: {data: input7, gridSize: 6},
-    expectedOutput: {data: expectedOutput7},
+    expectedOutput: expectedOutput7,
   },
 ]

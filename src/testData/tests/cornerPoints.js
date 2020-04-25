@@ -7,54 +7,45 @@ import input13 from '../samples/input13.json';
 import input14 from '../samples/input14.json';
 import input15 from '../samples/input15.json';
 
-import expectedOutput8 from '../samples/expectedOutput8.json';
-import expectedOutput9 from '../samples/expectedOutput9.json';
-import expectedOutput10 from '../samples/expectedOutput10.json';
-import expectedOutput11 from '../samples/expectedOutput11.json';
-import expectedOutput12 from '../samples/expectedOutput12.json';
-import expectedOutput13 from '../samples/expectedOutput13.json';
-import expectedOutput14 from '../samples/expectedOutput14.json';
-import expectedOutput15 from '../samples/expectedOutput15.json';
-
 export const cornerPointsData = [
   {
     title: 'General case',
-    input: {data: input8, gridSize: 6},
-    expectedOutput: {data: expectedOutput8},
+    input: {data: input8, xStart: 0, xEnd: 18, yStart: 0, yEnd: 18, gridSize: 6},
+    expectedOutput: [[[6,6],[12,6]]],
   },
   {
     title: 'Paths crossing angles',
-    input: {data: input9, gridSize: 6},
-    expectedOutput: {data: expectedOutput9},
+    input: {data: input9, xStart: 0, xEnd: 18, yStart: 0, yEnd: 18, gridSize: 6},
+    expectedOutput: [[[6,6]]],
   },
   {
     title: 'Paths on limits',
-    input: {data: input10, gridSize: 6},
-    expectedOutput: {data: expectedOutput10},
+    input: {data: input10, xStart: 0, xEnd: 18, yStart: 0, yEnd: 18, gridSize: 6},
+    expectedOutput: [[[6,6]]],
   },
   {
     title: 'No crossing',
-    input: {data: input11, gridSize: 6},
-    expectedOutput: {data: expectedOutput11},
+    input: {data: input11, xStart: 0, xEnd: 18, yStart: 0, yEnd: 18, gridSize: 6},
+    expectedOutput: [[]],
   },
   {
     title: 'PacMan edge case',
-    input: {data: input12, gridSize: 6},
-    expectedOutput: {data: expectedOutput12},
+    input: {data: input12, xStart: 0, xEnd: 18, yStart: 0, yEnd: 18, gridSize: 6},
+    expectedOutput: [[[6,6]]],
   },
   {
     title: 'Crossing adjacent path',
-    input: {data: input13, gridSize: 6},
-    expectedOutput: {data: expectedOutput13},
+    input: {data: input13, xStart: 0, xEnd: 18, yStart: 0, yEnd: 18, gridSize: 6},
+    expectedOutput: [[[12,6]]],
   },
   {
     title: 'Bouncing adjacent path',
-    input: {data: input14, gridSize: 6},
-    expectedOutput: {data: expectedOutput14},
+    input: {data: input14, xStart: 0, xEnd: 18, yStart: 0, yEnd: 18, gridSize: 6},
+    expectedOutput: [[[6,6],[12,6]]],
   },
   {
     title: 'Bounce points',
-    input: {data: input15, gridSize: 6},
-    expectedOutput: {data: expectedOutput15},
+    input: {data: input15, xStart: 0, xEnd: 18, yStart: 0, yEnd: 18, gridSize: 6},
+    expectedOutput: [[[6,6],[12,6]]],
   },
 ]

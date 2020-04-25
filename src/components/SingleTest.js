@@ -37,6 +37,20 @@ class SingleTest extends Component {
     )
   }
 
+  renderOutput(data) {
+    if (this.props.outputType === 'map') {
+      return this.renderGridSample(data);
+    } else {
+      return (
+        <div style={{ width: '180px', height: '180px', position: 'relative'}}>
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)'}}>
+            {JSON.stringify(data)}
+          </div>
+        </div>
+      );
+    }
+  }
+
   render() {
     return (
       <div
@@ -63,7 +77,7 @@ class SingleTest extends Component {
         </span>
         <span style={{ marginLeft: '10px', marginRight: '10px' }}>
           <div>
-            {this.renderGridSample(this.props.realOutput.data)}
+            {this.renderOutput(this.props.realOutput)}
             <div>
               Output
           </div>
@@ -71,7 +85,7 @@ class SingleTest extends Component {
         </span>
         <span style={{ marginLeft: '10px', marginRight: '10px' }}>
           <div>
-            {this.renderGridSample(this.props.expectedOutput.data)}
+            {this.renderOutput(this.props.expectedOutput)}
             <div>
               Expected
           </div>

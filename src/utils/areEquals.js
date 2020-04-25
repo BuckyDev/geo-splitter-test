@@ -1,5 +1,7 @@
 
 export function areEquals(stuff1,stuff2){
+  return JSON.stringify(stuff1)===JSON.stringify(stuff2)
+  /* 
   //Early returns if types are differents
   if(Array.isArray(stuff1) && !Array.isArray(stuff2)){
     return false;
@@ -25,5 +27,5 @@ export function areEquals(stuff1,stuff2){
   }
 
   //If both are objects
-  return Object.keys(stuff1).every(key => areEquals(stuff1[key],stuff2[key]))
+  return Object.keys(stuff1).every(key => areEquals(stuff1[key],stuff2[key])) */
 }

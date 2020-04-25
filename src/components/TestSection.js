@@ -13,6 +13,7 @@ import { areEquals } from '../utils/areEquals';
 class TestSection extends Component {
   static propTypes = {
     isInitiallyOpened: PropTypes.bool.isRequired,
+    outputType: PropTypes.string.isRequired,
     sectionTitle: PropTypes.string.isRequired,
     subTitle: PropTypes.string.isRequired,
     testFunction: PropTypes.func.isRequired,
@@ -43,7 +44,7 @@ class TestSection extends Component {
         key={key}
         input={input}
         expectedOutput={expectedOutput}
-        outputType={{}}
+        outputType={this.props.outputType}
         realOutput={this.props.testFunction(input)}
       />
     )

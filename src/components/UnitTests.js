@@ -4,25 +4,35 @@ import TestSection from './TestSection';
 import { splitData } from '../testData/tests/split';
 import { cornerPointsData } from '../testData/tests/cornerPoints';
 
+import {
+  addSplitPoints,
+  generateCornerPoints,
+} from 'geo-splitter';
+
 class UnitTests extends Component {
   render() {
     return (
       <div>
         <TestSection
+          outputType='map'
           sectionTitle='Generate split points'
           subTitle='addSplitPointsAll(data, gridSize)'
-          testFunction={stuff => stuff}
+          testFunction={stuff => {
+            return {
+              ...stuff.data,
+              features: addSplitPoints(stuff.data, stuff.gridSize)
+            }
+          }}
           testData={splitData}
-        >
-        </TestSection>
+        />
         <TestSection
+          outputType='array'
           isInitiallyOpened={true}
           sectionTitle='Generate corner points'
           subTitle='generateCornerPoints(data, xStart, xEnd, yStart, yEnd, gridSize)'
-          testFunction={stuff => stuff}
+          testFunction={stuff => generateCornerPoints(stuff.data, stuff.xStart, stuff.xEnd, stuff.yStart, stuff.yEnd, stuff.gridSize)}
           testData={cornerPointsData}
-        >
-        </TestSection>
+        />
       </div>
     );
   }
