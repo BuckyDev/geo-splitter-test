@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import TestSection from './TestSection';
 
-import fullSample from '../fullSample';
+import { splitData } from '../testData/tests/split';
+import { cornerPointsData } from '../testData/tests/cornerPoints';
 
 class UnitTests extends Component {
   render() {
@@ -9,122 +10,17 @@ class UnitTests extends Component {
       <div>
         <TestSection
           sectionTitle='Generate split points'
-          subTitle='function ran'
+          subTitle='addSplitPointsAll(data, gridSize)'
           testFunction={stuff => stuff}
-          testData={[
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-          ]}
+          testData={splitData}
         >
         </TestSection>
         <TestSection
-          sectionTitle='Section'
-          subTitle='function ran'
+          isInitiallyOpened={true}
+          sectionTitle='Generate corner points'
+          subTitle='generateCornerPoints(data, xStart, xEnd, yStart, yEnd, gridSize)'
           testFunction={stuff => stuff}
-          testData={[
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-          ]}
-        >
-        </TestSection>
-        <TestSection
-          sectionTitle='Section'
-          subTitle='function ran'
-          testFunction={stuff => stuff}
-          testData={[
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-          ]}
-        >
-        </TestSection>
-        <TestSection
-          sectionTitle='Section'
-          subTitle='function ran'
-          testFunction={stuff => stuff}
-          testData={[
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-          ]}
-        >
-        </TestSection>
-        <TestSection
-          sectionTitle='Section'
-          subTitle='function ran'
-          testFunction={stuff => stuff}
-          testData={[
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-            {
-              input: {data: fullSample},
-              expectedOutput: {data: fullSample},
-            },
-          ]}
+          testData={cornerPointsData}
         >
         </TestSection>
       </div>

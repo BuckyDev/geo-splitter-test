@@ -267,6 +267,23 @@
           ]
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "12"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [47,45],
+            [50,43],
+            [50,38],
+            [45,35]
+          ]
+        ]
+      }
     }
   ]
 }

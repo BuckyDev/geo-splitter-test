@@ -6,6 +6,7 @@ import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 
 class SingleTest extends Component {
   static propTypes = {
+    title: PropTypes.string.isRequired,
     input: PropTypes.object.isRequired,
     expectedOutput: PropTypes.object.isRequired,
     realOutput: PropTypes.object.isRequired,
@@ -47,6 +48,9 @@ class SingleTest extends Component {
         }}
       >
         {this.renderIcon()}
+        <span>
+          {this.props.title}
+        </span>
         <span style={{ marginLeft: '10px', marginRight: '10px' }}>
           <div>
             {this.renderGridSample(this.props.input.data)}

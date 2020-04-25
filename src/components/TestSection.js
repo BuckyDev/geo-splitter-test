@@ -10,6 +10,7 @@ import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 
 class TestSection extends Component {
   static propTypes = {
+    isInitiallyOpened: PropTypes.bool.isRequired,
     sectionTitle: PropTypes.string.isRequired,
     subTitle: PropTypes.string.isRequired,
     testFunction: PropTypes.func.isRequired,
@@ -18,11 +19,13 @@ class TestSection extends Component {
       expectedOutput: PropTypes.object
     }))
   }
-
-  state = {
-    open: false,
-    passing: 0,
-    failing: 0,
+  constructor(props){
+    super(props);
+    this.state = {
+      open: props.isInitiallyOpened || false,
+      passing: 0,
+      failing: 0,
+    }
   }
 
   componentDidMount() {
@@ -31,9 +34,10 @@ class TestSection extends Component {
     this.setState({ passing, failing });
   }
 
-  renderSingleTest(input, expectedOutput, key) {
+  renderSingleTest(input, expectedOutput, key, title) {
     return (
       <SingleTest
+        title={title}
         key={key}
         input={input}
         expectedOutput={expectedOutput}
@@ -80,7 +84,7 @@ class TestSection extends Component {
           <span style={{ left: '40px', position: 'absolute' }}>
             {this.props.sectionTitle}
           </span>
-          <span style={{ verticalAlign: 'middle', fontSize: '20px', color: '#aaaaaa' }}>
+          <span style={{ verticalAlign: 'middle', fontSize: '16px', color: '#aaaaaa' }}>
             {this.props.subTitle}
           </span>
           {this.renderResults()}
@@ -99,7 +103,7 @@ class TestSection extends Component {
             overflow: 'hidden'
           }}
         >
-          {this.props.testData.map((el, idx) => this.renderSingleTest(el.input, el.expectedOutput, idx))}
+          {this.props.testData.map((el, idx) => this.renderSingleTest(el.input, el.expectedOutput, idx, el.title))}
         </div>
       </div>
     );
