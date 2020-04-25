@@ -4,6 +4,8 @@ import Grid from './Grid';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 
+import { areEquals } from '../utils/areEquals';
+
 class SingleTest extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
@@ -14,7 +16,7 @@ class SingleTest extends Component {
   }
 
   renderIcon() {
-    if (this.props.expectedOutput === this.props.realOutput) {
+    if (areEquals(this.props.expectedOutput, this.props.realOutput)) {
       return <CheckCircleOutlineOutlinedIcon fontSize='large' htmlColor='#1fb96c' />
     } else {
       return <CancelOutlinedIcon fontSize='large' htmlColor='#cd2424' />

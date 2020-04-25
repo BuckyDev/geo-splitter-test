@@ -8,6 +8,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 
+import { areEquals } from '../utils/areEquals';
+
 class TestSection extends Component {
   static propTypes = {
     isInitiallyOpened: PropTypes.bool.isRequired,
@@ -29,7 +31,7 @@ class TestSection extends Component {
   }
 
   componentDidMount() {
-    const passing = this.props.testData.filter(el => el.expectedOutput === this.props.testFunction(el.input)).length
+    const passing = this.props.testData.filter(el => areEquals(el.expectedOutput, this.props.testFunction(el.input))).length
     const failing = this.props.testData.length - passing;
     this.setState({ passing, failing });
   }
