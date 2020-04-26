@@ -19,7 +19,7 @@ import expectedOutput8 from '../samples/cornerMerger/expectedOutput8.json';
 import expectedOutput9 from '../samples/cornerMerger/expectedOutput9.json';
 import expectedOutput10 from '../samples/cornerMerger/expectedOutput10.json';
 
-export const mergerData = [
+export const cornerMergerData = [
   {
     title: 'Single corner',
     input: {
