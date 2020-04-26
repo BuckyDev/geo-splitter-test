@@ -41,7 +41,7 @@ export const splitData = [
     expectedOutput: expectedOutput5,
   },
   {
-    title: 'Paths crossing perp limits',
+    title: 'Paths crossing perpendicular limits',
     input: {data: input6, gridSize: 6},
     expectedOutput: expectedOutput6,
   },

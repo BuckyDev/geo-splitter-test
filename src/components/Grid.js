@@ -115,14 +115,46 @@ class Grid extends Component {
     }
   }
 
+  renderExtraPoints() {
+    if (!this.props.extraPoints) {
+      return null;
+    } else {
+      return this.props.extraPoints.map(coord => <circle cx={coord[0] * 10} cy={(this.props.yMax - coord[1]) * 10} r="6" stroke="white" fill="rgb(226, 152, 12)" />)
+    }
+  }
+
+  renderExtraLines() {
+    if (!this.props.extraLines) {
+      return null;
+    } else {
+      return this.props.extraLines.map(line => {
+        const path = d3.line()(line.map(coord => [coord[0] * 10, (this.props.yMax - coord[1]) * 10]))
+        return <path d={path} stroke="red" fill="none" />
+      })
+    }
+  }
+
+  renderExtraLinesPoints() {
+    if (!this.props.extraLines) {
+      return null;
+    } else {
+      return this.props.extraLines.map(line => 
+        line.map(coord => <circle cx={coord[0] * 10} cy={(this.props.yMax - coord[1]) * 10} r="4" stroke="none" fill="white" />)
+      )
+    }
+  }
+
   render() {
-    const { xMin, xMax, yMin, yMax} = this.props;
+    const { xMin, xMax, yMin, yMax, data, extraLines } = this.props;
     return (
       <svg height={(yMax - yMin) * 10} width={(xMax - xMin) * 10}>
-        {this.renderPolygons()}
+        {data && this.renderPolygons()}
         {this.renderHorizontalGridLines()}
         {this.renderVerticalGridLines()}
-        {this.renderPoints()}
+        {data && !extraLines && this.renderPoints()}
+        {this.renderExtraLines()}
+        {this.renderExtraLinesPoints()}
+        {this.renderExtraPoints()}
       </svg>
     );
   }

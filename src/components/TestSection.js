@@ -8,12 +8,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 
-import { areEquals } from '../utils/areEquals';
-
 class TestSection extends Component {
   static propTypes = {
     isInitiallyOpened: PropTypes.bool.isRequired,
     outputType: PropTypes.string.isRequired,
+    inputType: PropTypes.string,
     sectionTitle: PropTypes.string.isRequired,
     subTitle: PropTypes.string.isRequired,
     testFunction: PropTypes.func.isRequired,
@@ -26,15 +25,8 @@ class TestSection extends Component {
     super(props);
     this.state = {
       open: props.isInitiallyOpened || false,
-      passing: 0,
-      failing: 0,
+      testResults: {}
     }
-  }
-
-  componentDidMount() {
-    const passing = this.props.testData.filter(el => areEquals(el.expectedOutput, this.props.testFunction(el.input))).length
-    const failing = this.props.testData.length - passing;
-    this.setState({ passing, failing });
   }
 
   renderSingleTest(input, expectedOutput, key, title) {
@@ -45,7 +37,9 @@ class TestSection extends Component {
         input={input}
         expectedOutput={expectedOutput}
         outputType={this.props.outputType}
-        realOutput={this.props.testFunction(input)}
+        inputType={this.props.inputType}
+        testFunction={this.props.testFunction}
+        sendResult={(id,val) => {this.state.testResults[id] = val; this.forceUpdate()}}
       />
     )
   }
@@ -62,11 +56,11 @@ class TestSection extends Component {
     const nbTests = this.props.testData.length
     return (
       <span style={{ fontSize: '25px', right: '0px', top: '5px', position: 'absolute' }}>
-        <span>{this.state.passing}</span>
+        <span>{Object.values(this.state.testResults).filter(value => value).length}</span>
         <span style={{ marginLeft: '2px', verticalAlign: 'middle' }}>
           <CheckCircleOutlineOutlinedIcon htmlColor='#1fb96c' />
         </span>
-        <span style={{ marginLeft: '10px' }}>{this.state.failing}</span>
+        <span style={{ marginLeft: '10px' }}>{Object.values(this.state.testResults).filter(value => !value).length}</span>
         <span style={{ marginLeft: '2px', verticalAlign: 'middle' }}>
           <CancelOutlinedIcon htmlColor='#cd2424' />
         </span>
@@ -84,7 +78,7 @@ class TestSection extends Component {
           <span style={{ left: '0px', position: 'absolute' }}>
             {this.renderIcon()}
           </span>
-          <span style={{ left: '40px', position: 'absolute' }}>
+          <span style={{ left: '40px', position: 'absolute', fontSize: '24px' }}>
             {this.props.sectionTitle}
           </span>
           <span style={{ verticalAlign: 'middle', fontSize: '16px', color: '#aaaaaa' }}>
@@ -101,7 +95,7 @@ class TestSection extends Component {
         />
         <div
           style={{
-            height: this.state.open ? `${this.props.testData.length * 211 + 10}px` : '0px',
+            height: this.state.open ? `${this.props.testData.length * 260 + 10}px` : '0px',
             transition: '0.2s ease-in-out',
             overflow: 'hidden'
           }}
