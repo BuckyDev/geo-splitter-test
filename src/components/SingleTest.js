@@ -30,6 +30,9 @@ class SingleTest extends Component {
 
   componentDidMount(){
     const realOutput = this.props.testFunction(this.props.input);
+    if(this.props.title === 'Single corner'){
+      console.log(realOutput)
+    }
     this.setState({realOutput})
     this.props.sendResult(this.props.title,areEquals(this.props.expectedOutput, realOutput))
   }
