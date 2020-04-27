@@ -95,7 +95,7 @@ class TestSection extends Component {
         />
         <div
           style={{
-            height: this.state.open ? `${this.props.testData.length * 260 + 10}px` : '0px',
+            height: this.state.open ? `${this.props.testData.length * 300 + 10}px` : '0px',
             transition: '0.2s ease-in-out',
             overflow: 'hidden'
           }}

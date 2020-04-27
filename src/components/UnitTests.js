@@ -10,14 +10,13 @@ import {
   addSplitPoints,
   cornerPointMerger,
   generateCornerPoints,
-  generateCornerPointsSubset,
   generatePointSubset,
 } from 'geo-splitter';
 
 function UnitTests() {
   return (
     <div>
-      <div>Main functions</div>
+      <div style={{marginBottom:'20px'}}>Main functions</div>
       <TestSection
         outputType='map'
         sectionTitle='Generate split points'
@@ -63,7 +62,6 @@ function UnitTests() {
         testData={cornerMergerData}
       />
       <TestSection
-        isInitiallyOpened={true}
         outputType='map'
         inputType='merger'
         sectionTitle='Merge paths without corner points'

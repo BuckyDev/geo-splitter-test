@@ -136,7 +136,7 @@ class SingleTest extends Component {
       <div
         style={{
           marginTop: '10px',
-          marginBottom: '10px',
+          marginBottom: '50px',
           width: '1000px',
         }}
       >
@@ -150,7 +150,7 @@ class SingleTest extends Component {
           }}
         >
           {this.renderIcon()}
-          <span style={{marginLeft: '10px', textAlign:'center'}}>
+          <span style={{margin: 'auto', marginLeft: '10px', textAlign:'center'}}>
             {this.props.title}
           </span>
         </div>
@@ -162,7 +162,7 @@ class SingleTest extends Component {
             fontSize: '16px'
           }}
         >
-          <span style={{ marginLeft: '10px', marginRight: '10px' }}>
+          <span style={{ marginLeft: '50px', marginRight: '50px' }}>
             <div>
               {this.renderInput(this.props.input.data)}
               <div>
@@ -170,7 +170,7 @@ class SingleTest extends Component {
               </div>
             </div>
           </span>
-          <span style={{ marginLeft: '10px', marginRight: '10px' }}>
+          <span style={{ marginLeft: '50px', marginRight: '50px' }}>
             <div>
               {this.renderOutput(this.state.realOutput)}
               <div>
@@ -178,7 +178,7 @@ class SingleTest extends Component {
               </div>
             </div>
           </span>
-          <span style={{ marginLeft: '10px', marginRight: '10px' }}>
+          <span style={{ marginLeft: '50px', marginRight: '50px' }}>
             <div>
               {this.renderOutput(this.props.expectedOutput)}
               <div>

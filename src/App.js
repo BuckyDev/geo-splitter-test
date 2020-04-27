@@ -29,8 +29,9 @@ function App() {
           yMax={50}
           gridSize={10}
         />
-        <div style={{ height: '30px' }} />
+        <div style={{ height: '60px' }} />
         <UnitTests/>
+        <div style={{ height: '150px' }} />
       </header>
     </div>
   );
