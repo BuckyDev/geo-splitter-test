@@ -30,7 +30,7 @@ class SingleTest extends Component {
 
   componentDidMount(){
     const realOutput = this.props.testFunction(this.props.input);
-    if(this.props.title === "Multiple non self-closed paths turned in multiple polygon"){
+    if(this.props.title === "Corner path points corner butterfly edge case"){
       console.log(realOutput)
     }
     this.setState({realOutput})

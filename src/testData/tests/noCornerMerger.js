@@ -4,6 +4,10 @@ import input3 from '../samples/noCornerMerger/input3.json';
 import input4 from '../samples/noCornerMerger/input4.json';
 import input5 from '../samples/noCornerMerger/input5.json';
 import input6 from '../samples/noCornerMerger/input6.json';
+import input7 from '../samples/noCornerMerger/input7.json';
+import input8 from '../samples/noCornerMerger/input8.json';
+import input9 from '../samples/noCornerMerger/input9.json';
+import input10 from '../samples/noCornerMerger/input10.json';
 
 import expectedOutput1 from '../samples/noCornerMerger/expectedOutput1.json';
 import expectedOutput2 from '../samples/noCornerMerger/expectedOutput2.json';
@@ -11,6 +15,10 @@ import expectedOutput3 from '../samples/noCornerMerger/expectedOutput3.json';
 import expectedOutput4 from '../samples/noCornerMerger/expectedOutput4.json';
 import expectedOutput5 from '../samples/noCornerMerger/expectedOutput5.json';
 import expectedOutput6 from '../samples/noCornerMerger/expectedOutput6.json';
+import expectedOutput7 from '../samples/noCornerMerger/expectedOutput7.json';
+import expectedOutput8 from '../samples/noCornerMerger/expectedOutput8.json';
+import expectedOutput9 from '../samples/noCornerMerger/expectedOutput9.json';
+import expectedOutput10 from '../samples/noCornerMerger/expectedOutput10.json';
 
 export const noCornerMergerData = [
   {
@@ -125,72 +133,72 @@ export const noCornerMergerData = [
     title: 'Corner path points edge case 1',
     input: {
       data: {
-        data: input1,
-        lines: [[[12,10],[14,10],[14,7],[13.5,6]]],
+        data: input7,
+        lines: [[[6,6],[8,9],[8,6]],[[9,6],[9,8],[11,6]],[[12,6],[10,8],[12,8]],[[12,10],[10,12],[12,12]]],
         points: [],
       },
       minX: 6,
       maxX: 12,
       minY: 6,
       maxY: 12,
-      pointSubset: [[[12,10],[14,10],[14,7],[13.5,6]]],
+      pointSubset: [[[6,6],[8,9],[8,6]],[[9,6],[9,8],[11,6]],[[12,6],[10,8],[12,8]],[[12,10],[10,12],[12,12]]],
       cornerPointSubset: [],
-      featurePoints: input1.features[0].geometry.coordinates
+      featurePoints: input7.features[0].geometry.coordinates
     },
-    expectedOutput: expectedOutput1,
+    expectedOutput: expectedOutput7,
   },
   {
     title: 'Corner path points edge case 2',
     input: {
       data: {
-        data: input1,
-        lines: [[[12,10],[14,10],[14,7],[13.5,6]]],
+        data: input8,
+        lines: [[[6,6],[8,9],[12,12]],[[8,12],[7,10],[6,12]]],
         points: [],
       },
       minX: 6,
       maxX: 12,
       minY: 6,
       maxY: 12,
-      pointSubset: [[[12,10],[14,10],[14,7],[13.5,6]]],
+      pointSubset: [[[6,6],[8,9],[12,12]],[[8,12],[7,10],[6,12]]],
       cornerPointSubset: [],
-      featurePoints: input1.features[0].geometry.coordinates
+      featurePoints: input8.features[0].geometry.coordinates
     },
-    expectedOutput: expectedOutput1,
+    expectedOutput: expectedOutput8,
   },
   {
     title: 'Corner path points butterfly edge case',
     input: {
       data: {
-        data: input1,
-        lines: [[[12,10],[14,10],[14,7],[13.5,6]]],
+        data: input9,
+        lines: [[[6,12],[8,9],[6,6]],[[12,6],[10,9],[12,12]]],
         points: [],
       },
       minX: 6,
       maxX: 12,
       minY: 6,
       maxY: 12,
-      pointSubset: [[[12,10],[14,10],[14,7],[13.5,6]]],
+      pointSubset: [[[6,12],[8,9],[6,6]],[[12,6],[10,9],[12,12]]],
       cornerPointSubset: [],
-      featurePoints: input1.features[0].geometry.coordinates
+      featurePoints: input9.features[0].geometry.coordinates
     },
-    expectedOutput: expectedOutput1,
+    expectedOutput: expectedOutput9,
   },
   {
     title: 'Corner path points corner butterfly edge case',
     input: {
       data: {
-        data: input1,
-        lines: [[[12,10],[14,10],[14,7],[13.5,6]]],
+        data: input10,
+        lines: [[[6,10],[8,9],[6,6],[9,8],[11,6]]],
         points: [],
       },
       minX: 6,
       maxX: 12,
       minY: 6,
       maxY: 12,
-      pointSubset: [[[12,10],[14,10],[14,7],[13.5,6]]],
+      pointSubset: [[[6,10],[8,9],[6,6],[9,8],[11,6]]],
       cornerPointSubset: [],
-      featurePoints: input1.features[0].geometry.coordinates
+      featurePoints: input10.features[0].geometry.coordinates
     },
-    expectedOutput: expectedOutput1,
+    expectedOutput: expectedOutput10,
   },
 ]
