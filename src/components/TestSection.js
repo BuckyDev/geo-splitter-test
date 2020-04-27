@@ -21,7 +21,7 @@ class TestSection extends Component {
       expectedOutput: PropTypes.object
     }))
   }
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       open: props.isInitiallyOpened || false,
@@ -39,7 +39,7 @@ class TestSection extends Component {
         outputType={this.props.outputType}
         inputType={this.props.inputType}
         testFunction={this.props.testFunction}
-        sendResult={(id,val) => {this.state.testResults[id] = val; this.forceUpdate()}}
+        sendResult={(id, val) => { this.state.testResults[id] = val; this.forceUpdate() }}
       />
     )
   }
@@ -75,15 +75,19 @@ class TestSection extends Component {
         <span
           onClick={() => this.setState({ open: !this.state.open })}
         >
-          <span style={{ left: '0px', position: 'absolute' }}>
-            {this.renderIcon()}
-          </span>
-          <span style={{ left: '40px', position: 'absolute', fontSize: '24px' }}>
-            {this.props.sectionTitle}
-          </span>
-          <span style={{ verticalAlign: 'middle', fontSize: '16px', color: '#aaaaaa' }}>
-            {this.props.subTitle}
-          </span>
+          <div style={{ left: '0px', display: 'flex' }}>
+            <div style={{width:'46px', display: 'inline-block' }}>
+              {this.renderIcon()}
+            </div>
+            <div style={{ display: 'inline-block' }}>
+              <span style={{ left: '40px', display: 'flex', fontSize: '24px' }}>
+                {this.props.sectionTitle}
+              </span>
+              <span style={{ display: 'flex', fontSize: '16px', color: '#aaaaaa' }}>
+                {this.props.subTitle}
+              </span>
+            </div>
+          </div>
           {this.renderResults()}
         </span>
         <div style={{
