@@ -30,7 +30,7 @@ class SingleTest extends Component {
 
   componentDidMount(){
     const realOutput = this.props.testFunction(this.props.input);
-    if(this.props.title === "Corner path points corner butterfly edge case"){
+    if(this.props.title === "Bouncing corner path point"){
       console.log(realOutput)
     }
     this.setState({realOutput})
@@ -82,8 +82,7 @@ class SingleTest extends Component {
         yMin={0}
         yMax={18}
         gridSize={6}
-        extraPoints={flattenDoubleArray(data.points)}
-        extraLines={data.lines}
+        extraLines={data}
       />
     )
   }
@@ -120,6 +119,8 @@ class SingleTest extends Component {
       return this.renderPolygons(data);
     } else if (this.props.outputType === 'pointArray') {
       return this.renderPoints(data);
+    } else if (this.props.outputType === 'lineArray') {
+      return this.renderLines(data);
     } else {
       return (
         <div style={{ width: '180px', height: '180px', position: 'relative', border: '1px solid white' }}>

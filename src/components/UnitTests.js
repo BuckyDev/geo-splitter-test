@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import TestSection from './TestSection';
 
 import { splitData } from '../testData/tests/split';
 import { cornerPointsData } from '../testData/tests/cornerPoints';
 import { cornerMergerData } from '../testData/tests/cornerMerger';
 import { noCornerMergerData } from '../testData/tests/noCornerMerger';
+import { subsetData } from '../testData/tests/subset';
 
 import {
   addSplitPoints,
@@ -35,6 +36,14 @@ function UnitTests() {
         subTitle='generateCornerPoints(data, xStart, xEnd, yStart, yEnd, gridSize)'
         testFunction={stuff => generateCornerPoints(stuff.data, stuff.xStart, stuff.xEnd, stuff.yStart, stuff.yEnd, stuff.gridSize)}
         testData={cornerPointsData}
+      />
+      <TestSection
+        outputType='lineArray'
+        inputType='map'
+        sectionTitle='Pre-split path into square areas subset'
+        subTitle='generatePointSubset(minX, maxX, minY, maxY, coordinates)'
+        testFunction={stuff => generatePointSubset(stuff.minX, stuff.maxX, stuff.minY, stuff.maxY, stuff.coordinates)}
+        testData={subsetData}
       />
       <TestSection
         outputType='map'
