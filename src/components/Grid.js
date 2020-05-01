@@ -115,6 +115,18 @@ class Grid extends Component {
     }
   }
 
+  renderZone(){
+    const origin = this.props.highlight
+    const {gridSize} = this.props;
+    if(!origin){
+      return null;
+    } else {
+      const line = [[origin.minX,origin.minY],[origin.minX,origin.minY + gridSize],[origin.minX + gridSize,origin.minY + gridSize],[origin.minX + gridSize,origin.minY],[origin.minX,origin.minY]]
+      const path = d3.line()(line.map(coord => [coord[0] * 10, (this.props.yMax - coord[1]) * 10]))
+      return <path d={path} stroke="rgb(31, 185, 108)" strokeWidth="2" fill="none" />
+    }
+  }
+
   renderExtraPoints() {
     if (!this.props.extraPoints) {
       return null;
@@ -151,6 +163,7 @@ class Grid extends Component {
         {data && this.renderPolygons()}
         {this.renderHorizontalGridLines()}
         {this.renderVerticalGridLines()}
+        {this.renderZone()}
         {data && !extraLines && this.renderPoints()}
         {this.renderExtraLines()}
         {this.renderExtraLinesPoints()}

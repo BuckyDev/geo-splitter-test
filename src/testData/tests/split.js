@@ -5,6 +5,8 @@ import input4 from '../samples/split/input4.json';
 import input5 from '../samples/split/input5.json';
 import input6 from '../samples/split/input6.json';
 import input7 from '../samples/split/input7.json';
+import input8 from '../samples/split/input8.json';
+import input9 from '../samples/split/input9.json';
 
 import expectedOutput1 from '../samples/split/expectedOutput1.json';
 import expectedOutput2 from '../samples/split/expectedOutput2.json';
@@ -13,6 +15,8 @@ import expectedOutput4 from '../samples/split/expectedOutput4.json';
 import expectedOutput5 from '../samples/split/expectedOutput5.json';
 import expectedOutput6 from '../samples/split/expectedOutput6.json';
 import expectedOutput7 from '../samples/split/expectedOutput7.json';
+import expectedOutput8 from '../samples/split/expectedOutput8.json';
+import expectedOutput9 from '../samples/split/expectedOutput9.json';
 
 export const splitData = [
   {
@@ -49,5 +53,15 @@ export const splitData = [
     title: 'Paths crossing parallel limits',
     input: {data: input7, gridSize: 6},
     expectedOutput: expectedOutput7,
+  },
+  {
+    title: 'Paths crossing multiple limits',
+    input: {data: input8, gridSize: 6},
+    expectedOutput: expectedOutput8,
+  },
+  {
+    title: 'Paths crossing multiple limits on angles',
+    input: {data: input9, gridSize: 6},
+    expectedOutput: expectedOutput9,
   },
 ]
