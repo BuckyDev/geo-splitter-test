@@ -30,7 +30,7 @@ class SingleTest extends Component {
 
   componentDidMount(){
     const realOutput = this.props.testFunction(this.props.input);
-    if(this.props.title === "Paths crossing multiple limits on angles"){
+    if(this.props.title === "Crossing adjacent path 2"){
       console.log(realOutput)
     }
     this.setState({realOutput})

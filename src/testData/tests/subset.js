@@ -7,6 +7,8 @@ import input5 from '../samples/subset/input5.json';
 import input6 from '../samples/subset/input6.json';
 import input7 from '../samples/subset/input7.json';
 import input8 from '../samples/subset/input8.json';
+import input9 from '../samples/subset/input9.json';
+import input10 from '../samples/subset/input10.json';
 
 export const subsetData = [
   {
@@ -67,7 +69,7 @@ export const subsetData = [
       maxY: 12,
       coordinates: input3.features[0].geometry.coordinates,
     },
-    expectedOutput: [[]],
+    expectedOutput: [],
   },
   {
     title: 'Crossing adjacent path',
@@ -91,7 +93,7 @@ export const subsetData = [
       maxY: 12,
       coordinates: input4.features[0].geometry.coordinates,
     },
-    expectedOutput: [[[6,9],[8,10],[12,10]],[[6,7],[7,6]]],
+    expectedOutput: [[[6,9],[8,10],[12,10]],[[7,6],[6,7]]],
   },
   {
     title: 'Bouncing point',
@@ -164,5 +166,29 @@ export const subsetData = [
       coordinates: input8.features[0].geometry.coordinates,
     },
     expectedOutput: [],
+  },
+  {
+    title: 'Adjacent path corner inside square',
+    input: {
+      data: input9,
+      minX: 6,
+      maxX: 12,
+      minY: 6,
+      maxY: 12,
+      coordinates: input9.features[0].geometry.coordinates,
+    },
+    expectedOutput: [[[7,7],[8,12],[12,12],[12,8]]],
+  },
+  {
+    title: 'Polygon is square',
+    input: {
+      data: input10,
+      minX: 6,
+      maxX: 12,
+      minY: 6,
+      maxY: 12,
+      coordinates: input10.features[0].geometry.coordinates,
+    },
+    expectedOutput: [[[6,6],[6,12],[12,12],[12,6]]],
   },
 ]
