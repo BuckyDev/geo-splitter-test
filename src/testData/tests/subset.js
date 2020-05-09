@@ -3,6 +3,7 @@ import input2 from '../samples/subset/input2.json';
 import input2_1 from '../samples/subset/input2_1.json';
 import input3 from '../samples/subset/input3.json';
 import input4 from '../samples/subset/input4.json';
+import input4_2 from '../samples/subset/input4_2.json';
 import input5 from '../samples/subset/input5.json';
 import input6 from '../samples/subset/input6.json';
 import input7 from '../samples/subset/input7.json';
@@ -94,6 +95,18 @@ export const subsetData = [
       coordinates: input4.features[0].geometry.coordinates,
     },
     expectedOutput: [[[6,9],[8,10],[12,10]],[[7,6],[6,7]]],
+  },
+  {
+    title: 'Crossing adjacent path 3',
+    input: {
+      data: input4_2,
+      minX: 6,
+      maxX: 12,
+      minY: 0,
+      maxY: 6,
+      coordinates: input4_2.features[0].geometry.coordinates,
+    },
+    expectedOutput: [[[12,4.5],[11,6]]],
   },
   {
     title: 'Bouncing point',

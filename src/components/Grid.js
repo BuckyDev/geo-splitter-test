@@ -22,8 +22,10 @@ class Grid extends Component {
   constructor(props) {
     super(props);
     if (props.type === 'splitted') {
+      const splitted = split(props.data, props.xMin, props.xMax, props.yMin, props.yMax, props.gridSize);
+      console.log(splitted)
       this.state = {
-        splitted: split(props.data, props.xMin, props.xMax, props.yMin, props.yMax, props.gridSize)
+        splitted, 
       }
     }
   }
