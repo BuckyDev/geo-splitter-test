@@ -30,9 +30,6 @@ class SingleTest extends Component {
 
   componentDidMount(){
     const realOutput = this.props.testFunction(this.props.input);
-    if(this.props.title === "Bouncing corner path point"){
-      console.log(realOutput)
-    }
     this.setState({realOutput})
     this.props.sendResult(this.props.title,areEquals(this.props.expectedOutput, realOutput))
   }
@@ -45,7 +42,7 @@ class SingleTest extends Component {
     }
   }
 
-  renderPolygons(data) {
+  renderPolygons(data,highlight) {
     return (
       <Grid
         type='original'
@@ -55,11 +52,12 @@ class SingleTest extends Component {
         yMax={18}
         gridSize={6}
         data={data}
+        highlight={highlight}
       />
     )
   }
 
-  renderPoints(data) {
+  renderPoints(data,highlight) {
     return (
       <Grid
         type='original'
@@ -69,11 +67,12 @@ class SingleTest extends Component {
         yMax={18}
         gridSize={6}
         extraPoints={flattenDoubleArray(data)}
+        highlight={highlight}
       />
     )
   }
 
-  renderLines(data) {
+  renderLines(data,highlight) {
     return (
       <Grid
         type='original'
@@ -83,6 +82,7 @@ class SingleTest extends Component {
         yMax={18}
         gridSize={6}
         extraLines={data}
+        highlight={highlight}
       />
     )
   }
@@ -111,16 +111,16 @@ class SingleTest extends Component {
     }
   }
 
-  renderOutput(data) {
+  renderOutput(data,highlight) {
     if(!data){
       return null;
     }
     if (this.props.outputType === 'map') {
-      return this.renderPolygons(data);
+      return this.renderPolygons(data,highlight);
     } else if (this.props.outputType === 'pointArray') {
-      return this.renderPoints(data);
+      return this.renderPoints(data,highlight);
     } else if (this.props.outputType === 'lineArray') {
-      return this.renderLines(data);
+      return this.renderLines(data,highlight);
     } else {
       return (
         <div style={{ width: '180px', height: '180px', position: 'relative', border: '1px solid white' }}>
@@ -133,6 +133,8 @@ class SingleTest extends Component {
   }
 
   render() {
+    const {minX,minY} = this.props.input
+    const highlight = (minX !== null && minY !== null) ? {minX,minY} : null
     return (
       <div
         style={{
@@ -173,7 +175,7 @@ class SingleTest extends Component {
           </span>
           <span style={{ marginLeft: '50px', marginRight: '50px' }}>
             <div>
-              {this.renderOutput(this.state.realOutput)}
+              {this.renderOutput(this.state.realOutput, highlight)}
               <div>
                 Output
               </div>
@@ -181,7 +183,7 @@ class SingleTest extends Component {
           </span>
           <span style={{ marginLeft: '50px', marginRight: '50px' }}>
             <div>
-              {this.renderOutput(this.props.expectedOutput)}
+              {this.renderOutput(this.props.expectedOutput, highlight)}
               <div>
                 Expected
               </div>

@@ -6,6 +6,7 @@ import input5 from '../samples/corner/input5.json';
 import input6 from '../samples/corner/input6.json';
 import input7 from '../samples/corner/input7.json';
 import input8 from '../samples/corner/input8.json';
+import input9 from '../samples/corner/input9.json';
 
 export const cornerPointsData = [
   {
@@ -47,5 +48,10 @@ export const cornerPointsData = [
     title: 'Bounce points',
     input: {data: input8, xStart: 0, xEnd: 18, yStart: 0, yEnd: 18, gridSize: 6},
     expectedOutput: [[[6,6],[12,6]]],
+  },
+  {
+    title: 'Corner path',
+    input: {data: input9, xStart: 0, xEnd: 18, yStart: 0, yEnd: 18, gridSize: 6},
+    expectedOutput: [[]],
   },
 ]
