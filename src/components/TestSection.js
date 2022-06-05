@@ -29,9 +29,10 @@ class TestSection extends Component {
     }
   }
 
-  renderSingleTest(input, expectedOutput, key, title) {
+  renderSingleTest(input, expectedOutput, key, title, gridSize = 6) {
     return (
       <SingleTest
+        gridSize={gridSize}
         title={title}
         key={key}
         input={input}
@@ -104,7 +105,7 @@ class TestSection extends Component {
             overflow: 'hidden'
           }}
         >
-          {this.props.testData.map((el, idx) => this.renderSingleTest(el.input, el.expectedOutput, idx, el.title))}
+          {this.props.testData.map((el, idx) => this.renderSingleTest(el.input, el.expectedOutput, idx, el.title, el.gridSize))}
         </div>
       </div>
     );

@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from './components/Grid';
 import UnitTests from './components/UnitTests';
+import ConversionError from './components/ConversionError';
 import './App.css';
 import fullSample from './fullSample';
 
@@ -31,6 +32,8 @@ function App() {
         />
         <div style={{ height: '60px' }} />
         <UnitTests/>
+        <div style={{ height: '60px' }} />
+        <ConversionError/>
         <div style={{ height: '150px' }} />
       </header>
     </div>

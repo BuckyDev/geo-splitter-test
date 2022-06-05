@@ -10,6 +10,7 @@ import input9 from '../samples/noCornerMerger/input9.json';
 import input9_1 from '../samples/noCornerMerger/input9_1.json';
 import input10 from '../samples/noCornerMerger/input10.json';
 import input11 from '../samples/noCornerMerger/input11.json';
+import input12 from '../samples/noCornerMerger/input12.json';
 
 import expectedOutput1 from '../samples/noCornerMerger/expectedOutput1.json';
 import expectedOutput2 from '../samples/noCornerMerger/expectedOutput2.json';
@@ -23,6 +24,7 @@ import expectedOutput9 from '../samples/noCornerMerger/expectedOutput9.json';
 import expectedOutput9_1 from '../samples/noCornerMerger/expectedOutput9_1.json';
 import expectedOutput10 from '../samples/noCornerMerger/expectedOutput10.json';
 import expectedOutput11 from '../samples/noCornerMerger/expectedOutput11.json';
+import expectedOutput12 from '../samples/noCornerMerger/expectedOutput12.json';
 
 export const noCornerMergerData = [
   {
@@ -240,5 +242,24 @@ export const noCornerMergerData = [
       featurePoints: input11.features[0].geometry.coordinates
     },
     expectedOutput: expectedOutput11,
+  },
+  {
+    title: 'Gutter edge case',
+    gridSize: 10,
+    input: {
+      data: {
+        data: input12,
+        lines: [[[11,10],[11,13],[12,14],[16,13],[16,10]],[[17,10],[17,11],[18,10]],[[15,10],[14,12],[14,10]],[[13,10],[12,12],[12,10]]],
+        points: [],
+      },
+      minX: 10,
+      maxX: 20,
+      minY: 10,
+      maxY: 20,
+      pointSubset: [[[11,10],[11,13],[12,14],[16,13],[16,10]],[[17,10],[17,11],[18,10]],[[15,10],[14,12],[14,10]],[[13,10],[12,12],[12,10]]],
+      cornerPointSubset: [],
+      featurePoints: input12.features[0].geometry.coordinates
+    },
+    expectedOutput: expectedOutput12,
   },
 ]

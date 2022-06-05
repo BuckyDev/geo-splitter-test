@@ -16,6 +16,7 @@ class SingleTest extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     key: PropTypes.number,
+    gridSize: PropTypes.number,
     input: PropTypes.object.isRequired,
     expectedOutput: PropTypes.object.isRequired,
     inputType: PropTypes.string,
@@ -26,6 +27,10 @@ class SingleTest extends Component {
 
   state={
     realOutput: null,
+  }
+
+  static defaultProps={
+    gridSize: 6,
   }
 
   componentDidMount(){
@@ -43,14 +48,15 @@ class SingleTest extends Component {
   }
 
   renderPolygons(data,highlight) {
+    const { gridSize } = this.props;
     return (
       <Grid
         type='original'
         xMin={0}
-        xMax={18}
+        xMax={3*gridSize}
         yMin={0}
-        yMax={18}
-        gridSize={6}
+        yMax={3*gridSize}
+        gridSize={gridSize}
         data={data}
         highlight={highlight}
       />
@@ -58,14 +64,15 @@ class SingleTest extends Component {
   }
 
   renderPoints(data,highlight) {
+    const { gridSize } = this.props;
     return (
       <Grid
         type='original'
         xMin={0}
-        xMax={18}
+        xMax={3*gridSize}
         yMin={0}
-        yMax={18}
-        gridSize={6}
+        yMax={3*gridSize}
+        gridSize={gridSize}
         extraPoints={flattenDoubleArray(data)}
         highlight={highlight}
       />
@@ -73,14 +80,15 @@ class SingleTest extends Component {
   }
 
   renderLines(data,highlight) {
+    const { gridSize } = this.props;
     return (
       <Grid
         type='original'
         xMin={0}
-        xMax={18}
+        xMax={3*gridSize}
         yMin={0}
-        yMax={18}
-        gridSize={6}
+        yMax={3*gridSize}
+        gridSize={gridSize}
         extraLines={data}
         highlight={highlight}
       />
@@ -88,14 +96,15 @@ class SingleTest extends Component {
   }
 
   renderMergerInput(data){
+    const { gridSize } = this.props;
     return (
       <Grid
         type='original'
         xMin={0}
-        xMax={18}
+        xMax={3*gridSize}
         yMin={0}
-        yMax={18}
-        gridSize={6}
+        yMax={3*gridSize}
+        gridSize={gridSize}
         data={data.data}
         extraPoints={data.points}
         extraLines={data.lines}
@@ -133,8 +142,11 @@ class SingleTest extends Component {
   }
 
   render() {
+    const {gridSize} = this.props;
     const {minX,minY} = this.props.input
     const highlight = (minX !== null && minY !== null) ? {minX,minY} : null
+
+    const margin = `${50 - (gridSize-6)*10}px`;
     return (
       <div
         style={{
@@ -165,7 +177,7 @@ class SingleTest extends Component {
             fontSize: '16px'
           }}
         >
-          <span style={{ marginLeft: '50px', marginRight: '50px' }}>
+          <span style={{ marginLeft: margin, marginRight: margin }}>
             <div>
               {this.renderInput(this.props.input.data)}
               <div>
@@ -173,7 +185,7 @@ class SingleTest extends Component {
               </div>
             </div>
           </span>
-          <span style={{ marginLeft: '50px', marginRight: '50px' }}>
+          <span style={{ marginLeft: margin, marginRight: margin }}>
             <div>
               {this.renderOutput(this.state.realOutput, highlight)}
               <div>
@@ -181,7 +193,7 @@ class SingleTest extends Component {
               </div>
             </div>
           </span>
-          <span style={{ marginLeft: '50px', marginRight: '50px' }}>
+          <span style={{ marginLeft: margin, marginRight: margin }}>
             <div>
               {this.renderOutput(this.props.expectedOutput, highlight)}
               <div>

@@ -25,58 +25,90 @@ class Grid extends Component {
       const splitted = split(props.data, props.xMin, props.xMax, props.yMin, props.yMax, props.gridSize);
       console.log(splitted)
       this.state = {
-        splitted, 
+        splitted,
       }
     }
   }
 
+  static defaultProps = {
+    gridLines: true,
+    zoom: 1,
+    renderPoints: true,
+    renderExtraLinePoints: true,
+  }
+
   renderHorizontalGridLines() {
-    const { yMin, yMax, gridSize } = this.props;
-    const arr = genArray(yMin, yMax, 1)
-    return arr.map((val) => (
-      <path
-        stroke={val % gridSize === 0 ? 'white' : 'gray'}
-        stroke-width={val % gridSize === 0 ? '2' : '1'}
-        d={`M0 ${10 * val} L1000 ${10 * val} Z`}
-      />
-    ))
+    const { xMin, xMax, yMin, yMax, gridSize, gridLines, zoom } = this.props;
+    if (gridLines) {
+      const arr = genArray(yMin, yMax, 1);
+      return arr.map((val) => (
+        <path
+          stroke={val % gridSize === 0 ? 'white' : 'gray'}
+          stroke-width={val % gridSize === 0 ? '2' : '1'}
+          d={`M${xMin * zoom * 10} ${10 * zoom * val} L${xMax * zoom * 10} ${10 * zoom * val} Z`}
+        />
+      ))
+    } else {
+      const arr = genArray(yMin, yMax, gridSize);
+      return arr.map((val) => (
+        <path
+          stroke='white'
+          stroke-width='2'
+          d={`M${xMin * zoom * 10} ${10 * zoom * val} L${xMax * zoom * 10} ${10 * zoom * val} Z`}
+        />
+      ))
+    }
   }
 
   renderVerticalGridLines() {
-    const { xMin, xMax, gridSize } = this.props;
-    const arr = genArray(xMin, xMax, 1)
-    return arr.map((val) => (
-      <path
-        stroke={val % gridSize === 0 ? 'white' : 'gray'}
-        stroke-width={val % gridSize === 0 ? '2' : '1'}
-        d={`M${10 * val} 0 L${10 * val} 500 Z`}
-      />
-    ))
+    const { xMin, xMax, yMin, yMax, gridSize, gridLines, zoom } = this.props;
+    if (gridLines) {
+      const arr = genArray(xMin, xMax, 1);
+      return arr.map((val) => (
+        <path
+          stroke={val % gridSize === 0 ? 'white' : 'gray'}
+          stroke-width={val % gridSize === 0 ? '2' : '1'}
+          d={`M${10 * zoom * val} ${yMin * zoom * 10} L${10 * zoom * val} ${yMax * zoom * 10} Z`}
+        />
+      ))
+    } else {
+      const arr = genArray(xMin, xMax, gridSize);
+      return arr.map((val) => (
+        <path
+          stroke='white'
+          stroke-width='2'
+          d={`M${10 * zoom * val} ${yMin * zoom * 10} L${10 * zoom * val} ${yMax * zoom * 10} Z`}
+        />
+      ))
+    }
   }
 
   renderFullSamplePolygons() {
+    const { zoom } = this.props;
     return this.props.data.features.map(feature => {
       return feature.geometry.coordinates.map(polygon => {
-        const path = d3.line()(polygon.map(coord => [coord[0] * 10, (this.props.yMax - coord[1]) * 10]))
+        const path = d3.line()(polygon.map(coord => [coord[0] * 10 * zoom, (this.props.yMax - coord[1]) * 10 * zoom]))
         return <path d={path} stroke="none" fill="#e2980c" />
       })
     })
   }
 
   renderFullSamplePoints() {
+    const { zoom } = this.props;
     return this.props.data.features.map(feature => {
       return feature.geometry.coordinates.map(polygon => polygon
-        .map(coord => <circle cx={coord[0] * 10} cy={(this.props.yMax - coord[1]) * 10} r="4" stroke="none" fill="white" />)
+        .map(coord => <circle cx={coord[0] * 10 * zoom} cy={(this.props.yMax - coord[1]) * 10 * zoom} r="4" stroke="none" fill="white" />)
       )
     })
   }
 
   renderSplittedPolygons() {
+    const { zoom } = this.props;
     return this.state.splitted.map(file => {
       const color = randomColor();
       return file.features.map(feature => {
         return feature.geometry.coordinates.map(polygon => {
-          const path = d3.line()(polygon.map(coord => [coord[0] * 10, (this.props.yMax - coord[1]) * 10]))
+          const path = d3.line()(polygon.map(coord => [coord[0] * 10 * zoom, (this.props.yMax - coord[1]) * 10 * zoom]))
           return <path d={path} stroke="none" fill={color} />
         })
       })
@@ -84,10 +116,11 @@ class Grid extends Component {
   }
 
   renderSplittedPoints() {
+    const { zoom } = this.props;
     return this.state.splitted.map(file => {
       return file.features.map(feature => {
         return feature.geometry.coordinates.map(polygon => polygon
-          .map(coord => <circle cx={coord[0] * 10} cy={(this.props.yMax - coord[1]) * 10} r="4" stroke="none" fill="white" />)
+          .map(coord => <circle cx={coord[0] * 10 * zoom} cy={(this.props.yMax - coord[1]) * 10 * zoom} r="4" stroke="none" fill="white" />)
         )
       })
     })
@@ -117,58 +150,61 @@ class Grid extends Component {
     }
   }
 
-  renderZone(){
+  renderZone() {
     const origin = this.props.highlight
-    const {gridSize} = this.props;
-    if(!origin){
+    const { gridSize, zoom } = this.props;
+    if (!origin) {
       return null;
     } else {
-      const line = [[origin.minX,origin.minY],[origin.minX,origin.minY + gridSize],[origin.minX + gridSize,origin.minY + gridSize],[origin.minX + gridSize,origin.minY],[origin.minX,origin.minY]]
-      const path = d3.line()(line.map(coord => [coord[0] * 10, (this.props.yMax - coord[1]) * 10]))
+      const line = [[origin.minX, origin.minY], [origin.minX, origin.minY + gridSize], [origin.minX + gridSize, origin.minY + gridSize], [origin.minX + gridSize, origin.minY], [origin.minX, origin.minY]]
+      const path = d3.line()(line.map(coord => [coord[0] * 10 * zoom, (this.props.yMax - coord[1]) * 10 * zoom]))
       return <path d={path} stroke="rgb(31, 185, 108)" strokeWidth="2" fill="none" />
     }
   }
 
   renderExtraPoints() {
+    const { zoom } = this.props;
     if (!this.props.extraPoints) {
       return null;
     } else {
-      return this.props.extraPoints.map(coord => <circle cx={coord[0] * 10} cy={(this.props.yMax - coord[1]) * 10} r="6" stroke="white" fill="rgb(226, 152, 12)" />)
+      return this.props.extraPoints.map(coord => <circle cx={coord[0] * 10 * zoom} cy={(this.props.yMax - coord[1]) * 10 * zoom} r="6" stroke="white" fill="rgb(226, 152, 12)" />)
     }
   }
 
   renderExtraLines() {
+    const { zoom } = this.props;
     if (!this.props.extraLines) {
       return null;
     } else {
       return this.props.extraLines.map(line => {
-        const path = d3.line()(line.map(coord => [coord[0] * 10, (this.props.yMax - coord[1]) * 10]))
+        const path = d3.line()(line.map(coord => [coord[0] * 10 * zoom, (this.props.yMax - coord[1]) * 10 * zoom]))
         return <path d={path} stroke="red" fill="none" />
       })
     }
   }
 
   renderExtraLinesPoints() {
+    const { zoom } = this.props;
     if (!this.props.extraLines) {
       return null;
     } else {
-      return this.props.extraLines.map(line => 
-        line.map(coord => <circle cx={coord[0] * 10} cy={(this.props.yMax - coord[1]) * 10} r="4" stroke="none" fill="white" />)
+      return this.props.extraLines.map(line =>
+        line.map(coord => <circle cx={coord[0] * 10 * zoom} cy={(this.props.yMax - coord[1]) * 10 * zoom} r="4" stroke="none" fill="white" />)
       )
     }
   }
 
   render() {
-    const { xMin, xMax, yMin, yMax, data, extraLines } = this.props;
+    const { xMin, xMax, yMin, yMax, data, extraLines, renderPoints, renderExtraLinePoints, zoom } = this.props;
     return (
-      <svg height={(yMax - yMin) * 10} width={(xMax - xMin) * 10}>
+      <svg height={(yMax - yMin) * 10 * zoom} width={(xMax - xMin) * 10 * zoom}>
         {data && this.renderPolygons()}
         {this.renderHorizontalGridLines()}
         {this.renderVerticalGridLines()}
         {this.renderZone()}
-        {data && !extraLines && this.renderPoints()}
+        {data && !extraLines && renderPoints && this.renderPoints()}
         {this.renderExtraLines()}
-        {this.renderExtraLinesPoints()}
+        {renderExtraLinePoints && this.renderExtraLinesPoints()}
         {this.renderExtraPoints()}
       </svg>
     );
