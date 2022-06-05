@@ -141,7 +141,7 @@ class ConsoleManager {
   }
 
   logState() {
-    //console.clear();
+    console.clear();
     this.logAnalysis();
     this.logSplitPoints();
     this.logCornerPoints();

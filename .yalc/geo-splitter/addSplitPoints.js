@@ -34,7 +34,6 @@ function addSplitPointFeature(coordinates, gridSize) {
 
 function addSplitPointsAll(data, gridSize) {
   C.splitPoints = RUN_STATE.RUNNING;
-  console.log('prout')
   return data.features.map((feature, idx) => {
     const enrichedCoordinates = addSplitPointFeature(feature.geometry.coordinates, gridSize);
     C.updateRun(idx, data.features.length);

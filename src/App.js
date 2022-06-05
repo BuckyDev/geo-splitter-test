@@ -1,45 +1,22 @@
-import React from 'react';
-import OrthonormalGrid from './components/OrthonormalGrid';
+import React, { useState } from 'react';
 import ConversionError from './components/ConversionError';
 import './App.css';
-import fullSample from './fullSample';
-import OrthonormalTests from './components/OrthonormalTests';
-import GeoOrthographicTests from './components/GeoOrthographicTests';
+import FullOrthonormalTests from './components/Pages/FullOrthonormalTests';
+import FullGeoOrthographicTests from './components/Pages/FullGeoOrthographicTests';
 
+const GRID_TYPES = {
+  ORTHONORMAL: 'ORTHONORMAL',
+  GEO_ORTHOGRAPHIC : 'GEO_ORTHOGRAPHIC'
+}
 
 function App() {
+  const [gridType, setGridType] = useState(GRID_TYPES.GEO_ORTHOGRAPHIC)
   return (
     <div className="App">
       <header className="App-header">
-        <div style={{marginBottom:'20px', fontSize: '36px'}}>Orthonormal grid</div>
-        <div style={{ marginTop: '20px', marginBottom: '10px'}}>Original</div>
-        <OrthonormalGrid
-          type='original'
-          data={fullSample}
-          xMin={0}
-          xMax={100}
-          yMin={0}
-          yMax={50}
-          gridSize={10}
-        />
-        <div style={{ marginTop: '20px', marginBottom: '10px'}}>Splitted</div>
-        <OrthonormalGrid
-          type='splitted'
-          data={fullSample}
-          xMin={0}
-          xMax={100}
-          yMin={0}
-          yMax={50}
-          gridSize={10}
-        />
-        <div style={{ height: '60px' }} />
-        <div>
-          <div style={{marginBottom:'20px'}}>Main functions</div>
-          <OrthonormalTests/>
-        </div>
-
-        <div style={{marginBottom:'20px', marginTop:'40px', fontSize: '36px'}}>Geo-orthographic grid</div>
-        <GeoOrthographicTests/>
+        <button onClick={() => setGridType(Object.keys(GRID_TYPES).filter(type => type !== gridType)[0])}>Swap</button>
+        {gridType === GRID_TYPES.ORTHONORMAL && <FullOrthonormalTests/>}
+        {gridType === GRID_TYPES.GEO_ORTHOGRAPHIC && <FullGeoOrthographicTests/>}
         <div style={{ height: '60px' }} />
         <ConversionError/>
         <div style={{ height: '150px' }} />

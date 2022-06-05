@@ -1,6 +1,6 @@
 {
   "name": "geo-splitter",
-  "version": "1.1.0+75fced1f",
+  "version": "1.1.0+066b8fe1",
   "description": "A package to split geoJSON data into tiles",
   "main": "index.js",
   "scripts": {
@@ -8,5 +8,5 @@
   },
   "author": "Yann Meyjonade aka BuckyDev",
   "license": "MIT",
-  "yalcSig": "75fced1ffd8a8ea28c95d7108c7a505b"
+  "yalcSig": "066b8fe1279292fe7aff84cf11330e08"
 }
