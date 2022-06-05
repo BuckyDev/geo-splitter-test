@@ -14,10 +14,9 @@ import {
   generatePointSubset,
 } from 'geo-splitter';
 
-function UnitTests() {
+function OrthonormalTests() {
   return (
-    <div>
-      <div style={{marginBottom:'20px'}}>Main functions</div>
+    <>
       <TestSection
         outputType='map'
         sectionTitle='Generate split points'
@@ -95,8 +94,8 @@ function UnitTests() {
         }}
         testData={noCornerMergerData}
       />
-    </div>
+    </>
   );
 }
 
-export default UnitTests;
+export default OrthonormalTests;
