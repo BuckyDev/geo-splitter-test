@@ -34,7 +34,7 @@ function filterAndNormalizedData(geoJson, minX, maxX, minY, maxY, featureId) {
 class ConversionError extends Component {
   state = {
     errorCode: null,
-    dataset: 'GSHHS_i_L1.json',
+    dataset: 'GSHHS_c_L1.json',
   };
 
   getOutput(func, funcParams, featurePoints, id) {
