@@ -2,69 +2,64 @@ const getTileCoords = ({
   currentX,
   currentTileWidth,
   currentY,
-  equatorialTileSize
+  equatorialTileSize,
 }) => {
   return [
-    [
-      currentX,
-      currentY
-    ],
-    [
-      currentX + currentTileWidth,
-      currentY
-    ],
-    [
-      currentX + currentTileWidth,
-      currentY + equatorialTileSize
-    ],
-    [
-      currentX,
-      currentY + equatorialTileSize
-    ],
-  ]
-}
+    [currentX, currentY],
+    [currentX + currentTileWidth, currentY],
+    [currentX + currentTileWidth, currentY + equatorialTileSize],
+    [currentX, currentY + equatorialTileSize],
+  ];
+};
 
-export const generateGOGrid = ({equatorialTileSize, mapHeight, mapWidth}) => {
-  const transitionIterations = Math.log(mapWidth/equatorialTileSize) / Math.log(4) - 1
+export const generateGOGrid = ({
+  equatorialTileSize,
+  mapHeight,
+  mapWidth,
+  latRatio,
+}) => {
+  const transitionIterations =
+    Math.log(mapWidth / equatorialTileSize) / Math.log(latRatio) - 1;
   const rowsNumber = mapHeight / equatorialTileSize;
 
   let currentX = 0;
   let currentY = 0;
   let currentRow = 0;
-  let currentTileWidth = mapWidth/4;
+  let currentTileWidth = mapWidth / latRatio;
   const tiles = [];
 
   const safety = 6000;
   let idx = 0;
 
-  while(
-    (currentX + currentTileWidth < mapWidth ||
-      currentY < mapHeight
-    ) && idx < safety
+  while (
+    (currentX + currentTileWidth < mapWidth || currentY < mapHeight) &&
+    idx < safety
   ) {
-    idx++
-    tiles.push(getTileCoords({
-      currentX,
-      currentTileWidth,
-      currentY,
-      equatorialTileSize
-    }))
+    idx++;
+    tiles.push(
+      getTileCoords({
+        currentX,
+        currentTileWidth,
+        currentY,
+        equatorialTileSize,
+      })
+    );
 
     // Update values for next iterations
-    if(currentX + currentTileWidth >= mapWidth){
-      currentX = 0
-      currentY += equatorialTileSize
+    if (currentX + currentTileWidth >= mapWidth) {
+      currentX = 0;
+      currentY += equatorialTileSize;
       // Compute next currentTileWidth
-      if(currentRow < transitionIterations) {
-        currentTileWidth /= 4;
-      } else if(currentRow + 1 >= rowsNumber - transitionIterations) {
-        currentTileWidth *= 4;
+      if (currentRow < transitionIterations) {
+        currentTileWidth /= latRatio;
+      } else if (currentRow + 1 >= rowsNumber - transitionIterations) {
+        currentTileWidth *= latRatio;
       }
-      currentRow ++;
+      currentRow++;
     } else {
-      currentX += currentTileWidth
+      currentX += currentTileWidth;
     }
   }
 
-  return tiles
-}
+  return tiles;
+};
