@@ -1,37 +1,22 @@
-import React from 'react';
-import Grid from './components/Grid';
-import UnitTests from './components/UnitTests';
+import React, { useState } from 'react';
 import ConversionError from './components/ConversionError';
 import './App.css';
-import fullSample from './fullSample';
+import FullOrthonormalTests from './components/Pages/FullOrthonormalTests';
+import FullGeoOrthographicTests from './components/Pages/FullGeoOrthographicTests';
 
+const GRID_TYPES = {
+  ORTHONORMAL: 'ORTHONORMAL',
+  GEO_ORTHOGRAPHIC : 'GEO_ORTHOGRAPHIC'
+}
 
 function App() {
+  const [gridType, setGridType] = useState(GRID_TYPES.GEO_ORTHOGRAPHIC)
   return (
     <div className="App">
       <header className="App-header">
-        <div style={{ marginTop: '20px', marginBottom: '10px'}}>Original</div>
-        <Grid 
-          type='original'
-          data={fullSample}
-          xMin={0}
-          xMax={100}
-          yMin={0}
-          yMax={50}
-          gridSize={10}
-        />
-        <div style={{ marginTop: '20px', marginBottom: '10px'}}>Splitted</div>
-        <Grid 
-          type='splitted'
-          data={fullSample}
-          xMin={0}
-          xMax={100}
-          yMin={0}
-          yMax={50}
-          gridSize={10}
-        />
-        <div style={{ height: '60px' }} />
-        <UnitTests/>
+        <button onClick={() => setGridType(Object.keys(GRID_TYPES).filter(type => type !== gridType)[0])}>Swap</button>
+        {gridType === GRID_TYPES.ORTHONORMAL && <FullOrthonormalTests/>}
+        {gridType === GRID_TYPES.GEO_ORTHOGRAPHIC && <FullGeoOrthographicTests/>}
         <div style={{ height: '60px' }} />
         <ConversionError/>
         <div style={{ height: '150px' }} />

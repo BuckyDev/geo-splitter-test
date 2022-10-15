@@ -18,7 +18,7 @@ function randomColor() {
   return `rgb(${Math.floor(Math.random() * 205) + 50},${Math.floor(Math.random() * 205) + 50},${Math.floor(Math.random() * 205) + 50})`
 }
 
-class Grid extends Component {
+class OrthonormalGrid extends Component {
   constructor(props) {
     super(props);
     if (props.type === 'splitted') {
@@ -211,4 +211,4 @@ class Grid extends Component {
   }
 }
 
-export default Grid;
+export default OrthonormalGrid;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'proptypes';
-import Grid from './Grid';
+import OrthonormalGrid from './OrthonormalGrid';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 
@@ -50,7 +50,7 @@ class SingleTest extends Component {
   renderPolygons(data,highlight) {
     const { gridSize } = this.props;
     return (
-      <Grid
+      <OrthonormalGrid
         type='original'
         xMin={0}
         xMax={3*gridSize}
@@ -66,7 +66,7 @@ class SingleTest extends Component {
   renderPoints(data,highlight) {
     const { gridSize } = this.props;
     return (
-      <Grid
+      <OrthonormalGrid
         type='original'
         xMin={0}
         xMax={3*gridSize}
@@ -82,7 +82,7 @@ class SingleTest extends Component {
   renderLines(data,highlight) {
     const { gridSize } = this.props;
     return (
-      <Grid
+      <OrthonormalGrid
         type='original'
         xMin={0}
         xMax={3*gridSize}
@@ -98,7 +98,7 @@ class SingleTest extends Component {
   renderMergerInput(data){
     const { gridSize } = this.props;
     return (
-      <Grid
+      <OrthonormalGrid
         type='original'
         xMin={0}
         xMax={3*gridSize}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Grid from './Grid';
+import OrthonormalGrid from './OrthonormalGrid';
 
 import {
   cornerPointMerger,
@@ -90,7 +90,7 @@ class ConversionError extends Component {
     return (
       <div>
         <div style={{marginBottom: '40px'}}>
-          <Grid
+          <OrthonormalGrid
             type='original'
             data={processedSample}
             extraPoints={processedExtraPoints}
@@ -107,7 +107,7 @@ class ConversionError extends Component {
           />
         </div>
         <div>
-          <Grid
+          <OrthonormalGrid
             type='original'
             data={processedResult}
             xMin={0}
