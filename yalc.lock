@@ -1,8 +1,0 @@
-{
-  "version": "v1",
-  "packages": {
-    "geo-splitter": {
-      "signature": "066b8fe1279292fe7aff84cf11330e08"
-    }
-  }
-}
