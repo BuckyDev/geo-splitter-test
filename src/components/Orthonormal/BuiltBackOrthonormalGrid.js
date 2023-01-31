@@ -1,9 +1,11 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { split, mergeTiles } from "geo-splitter";
 import { PropTypes } from "prop-types";
 
 import * as d3 from "d3";
 import Grid from "./Grid";
+import { groupSplit } from "../../utils/groupSplit";
+import { randomColor } from "../../utils/randomColor";
 
 function BuiltBackOrthonormalGrid({
   xMin,
@@ -15,21 +17,49 @@ function BuiltBackOrthonormalGrid({
   zoom,
   gridSize,
 }) {
+  const [mergeError, setMergeError] = useState(false);
+  const [hasMerged, setHasMerged] = useState(false);
   const splitted = useMemo(
     () => split(data, xMin, xMax, yMin, yMax, gridSize),
     [data, xMin, xMax, yMin, yMax, gridSize]
   );
 
-  const builtBack = useMemo(
-    () => mergeTiles(splitted, gridSize),
-    [splitted, gridSize]
-  );
-  console.log("data", data);
-  console.log("builtBack", builtBack);
-
-  const mergedPolygons = useMemo(
+  const groupedSplit = useMemo(
     () =>
-      builtBack.features.map((feature) =>
+      groupSplit({
+        splitData: splitted,
+        xMin,
+        xMax,
+        yMin,
+        yMax,
+        gridSize,
+      }),
+    [splitted, xMin, xMax, yMin, yMax, gridSize]
+  );
+
+  const builtBack = useMemo(() => {
+    try {
+      const mergedTiles = groupedSplit.map((splitGroup) =>
+        mergeTiles(splitGroup, gridSize)
+      );
+      setHasMerged(true);
+      return mergedTiles;
+    } catch (e) {
+      console.log(e);
+      setMergeError(true);
+      setHasMerged(true);
+      return undefined;
+    }
+  }, [groupedSplit, gridSize]);
+  console.log({ splitGroup: groupedSplit[7], splitted, builtBack });
+
+  const mergedPolygons = useMemo(() => {
+    if (mergeError || !hasMerged) {
+      return undefined;
+    }
+    return builtBack.map((featureCollection) => {
+      const color = randomColor();
+      return featureCollection.features.map((feature) =>
         feature.geometry.coordinates.map((polygon) => {
           const path = d3.line()(
             polygon.map((coord) => [
@@ -37,15 +67,18 @@ function BuiltBackOrthonormalGrid({
               (yMax - coord[1]) * 10 * zoom,
             ])
           );
-          return <path d={path} stroke="none" fill="#e2980c" />;
+          return <path d={path} stroke="none" fill={color} />;
         })
-      ),
-    [builtBack.features, yMax, zoom]
-  );
+      );
+    });
+  }, [builtBack, hasMerged, mergeError, yMax, zoom]);
 
-  const mergedPoints = useMemo(
-    () =>
-      builtBack.features.map((feature) =>
+  const mergedPoints = useMemo(() => {
+    if (mergeError || !hasMerged) {
+      return undefined;
+    }
+    return builtBack.map((featureCollection) =>
+      featureCollection.features.map((feature) =>
         feature.geometry.coordinates.map((polygon) =>
           polygon.map((coord) => (
             <circle
@@ -57,9 +90,9 @@ function BuiltBackOrthonormalGrid({
             />
           ))
         )
-      ),
-    [builtBack.features, yMax, zoom]
-  );
+      )
+    );
+  }, [builtBack, hasMerged, mergeError, yMax, zoom]);
 
   return (
     <svg height={(yMax - yMin) * 10 * zoom} width={(xMax - xMin) * 10 * zoom}>

@@ -7,6 +7,10 @@ import SplittedOrthonormalGrid from "../Orthonormal/SplittedOrthonormalGrid";
 import BuiltBackOrthonormalGrid from "../Orthonormal/BuiltBackOrthonormalGrid";
 
 function FullOrthonormalTests() {
+  const actualSample = {
+    ...fullSample,
+    features: fullSample.features.slice(-1),
+  };
   return (
     <>
       <div style={{ marginBottom: "20px", fontSize: "36px" }}>
@@ -14,7 +18,7 @@ function FullOrthonormalTests() {
       </div>
       <div style={{ marginTop: "20px", marginBottom: "10px" }}>Original</div>
       <OriginalOrthonormalGrid
-        data={fullSample}
+        data={actualSample}
         xMin={0}
         xMax={100}
         yMin={0}
@@ -23,7 +27,7 @@ function FullOrthonormalTests() {
       />
       <div style={{ marginTop: "20px", marginBottom: "10px" }}>Splitted</div>
       <SplittedOrthonormalGrid
-        data={fullSample}
+        data={actualSample}
         xMin={0}
         xMax={100}
         yMin={0}
@@ -32,7 +36,7 @@ function FullOrthonormalTests() {
       />
       <div style={{ marginTop: "20px", marginBottom: "10px" }}>Built back</div>
       <BuiltBackOrthonormalGrid
-        data={fullSample}
+        data={actualSample}
         xMin={0}
         xMax={100}
         yMin={0}
@@ -42,7 +46,7 @@ function FullOrthonormalTests() {
       <div style={{ height: "60px" }} />
       <div>
         <div style={{ marginBottom: "20px" }}>Main functions</div>
-        <OrthonormalTests />
+        {/* <OrthonormalTests /> */}
       </div>
     </>
   );

@@ -41,14 +41,27 @@ function OriginalOrthonormalGrid({
     }
     return data.features.map((feature) =>
       feature.geometry.coordinates.map((polygon) =>
-        polygon.map((coord) => (
-          <circle
-            cx={coord[0] * 10 * zoom}
-            cy={(yMax - coord[1]) * 10 * zoom}
-            r="4"
-            stroke="none"
-            fill="white"
-          />
+        polygon.map((coord, idx) => (
+          <>
+            {idx === 0 && (
+              <text
+                x={coord[0] * 10 * zoom}
+                y={(yMax - coord[1]) * 10 * zoom - 8}
+                fill="#5ae52f"
+                fontSize={16}
+                fontWeight={800}
+              >
+                {feature.properties.id}
+              </text>
+            )}
+            <circle
+              cx={coord[0] * 10 * zoom}
+              cy={(yMax - coord[1]) * 10 * zoom}
+              r="4"
+              stroke="none"
+              fill="white"
+            />
+          </>
         ))
       )
     );

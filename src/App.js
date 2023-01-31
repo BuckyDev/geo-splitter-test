@@ -15,6 +15,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <button
+          type="submit"
           onClick={() =>
             setGridType(
               Object.keys(GRID_TYPES).filter((type) => type !== gridType)[0]
@@ -23,13 +24,17 @@ function App() {
         >
           Swap
         </button>
-        {gridType === GRID_TYPES.ORTHONORMAL && <FullOrthonormalTests />}
+        {gridType === GRID_TYPES.ORTHONORMAL && (
+          <>
+            <FullOrthonormalTests />
+            <div style={{ height: "60px" }} />
+            <ConversionError />
+            <div style={{ height: "150px" }} />
+          </>
+        )}
         {gridType === GRID_TYPES.GEO_ORTHOGRAPHIC && (
           <FullGeoOrthographicTests />
         )}
-        <div style={{ height: "60px" }} />
-        <ConversionError />
-        <div style={{ height: "150px" }} />
       </header>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { genArray } from "../../utils/genArray";
-import { generateGOGrid } from "../Grid/generateGOGrid";
+import GridTiles from "./GridTiles";
 
 export default function Grid({ xMin, xMax, yMin, yMax, gridSize, zoom }) {
   // Compute horizontal grid lines
@@ -27,26 +27,7 @@ export default function Grid({ xMin, xMax, yMin, yMax, gridSize, zoom }) {
     />
   ));
 
-  // Compute grid tiles
-  const gridTilesArray = generateGOGrid({
-    equatorialTileSize: gridSize,
-    mapHeight: yMax - yMin,
-    mapWidth: xMax - xMin,
-    latRatio: 4,
-  });
-
-  const gridTiles = gridTilesArray.map((gridTile) => (
-    <path
-      stroke="white"
-      strokeWidth="2"
-      fill="none"
-      d={`M${10 * zoom * gridTile[0][0]} ${10 * zoom * gridTile[0][1]} L${
-        10 * zoom * gridTile[1][0]
-      } ${10 * zoom * gridTile[1][1]} L${10 * zoom * gridTile[2][0]} ${
-        10 * zoom * gridTile[2][1]
-      } L${10 * zoom * gridTile[3][0]} ${10 * zoom * gridTile[3][1]} Z`}
-    />
-  ));
+  const gridTiles = GridTiles({ xMin, xMax, yMin, yMax, gridSize, zoom });
 
   return horizontalLines.concat(verticalLines).concat(gridTiles);
 }
